@@ -1,0 +1,13 @@
+{
+  "name": "vault-pi-backend",
+  "private": true,
+  "description": "开发时用：监听源码变更并自动编译，配合 DevTools 实现改代码即自动重启",
+  "scripts": {
+    "watch": "chokidar-cli \"src/**/*.java\" \"src/main/resources/**\" -c \"mvn compile -q\" --initial",
+    "dev": "concurrently -n watch,boot -c blue,green \"npm run watch\" \"mvn spring-boot:run\""
+  },
+  "devDependencies": {
+    "chokidar-cli": "^3.0.0",
+    "concurrently": "^8.2.2"
+  }
+}

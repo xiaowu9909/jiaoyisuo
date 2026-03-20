@@ -1,0 +1,86 @@
+{
+  "title": "Vault π 撮合与持久化",
+  "uid": "vaultpi-match",
+  "version": 1,
+  "panels": [
+    {
+      "id": 1,
+      "title": "批量持久化队列积压",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+      "targets": [
+        { "expr": "vaultpi_batch_persistence_queue_size", "legendFormat": "queue size" }
+      ],
+      "description": "超过 50000 时健康检查 DOWN，需排查 flush 是否失败或吞吐不足"
+    },
+    {
+      "id": 2,
+      "title": "批量持久化失败次数",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
+      "targets": [
+        { "expr": "increase(vaultpi_batch_persistence_failures_total[1h])", "legendFormat": "failures/h" }
+      ],
+      "description": ">0 即需告警，参见 RUNBOOK_BATCH_PERSISTENCE.md"
+    },
+    {
+      "id": 3,
+      "title": "撮合异常次数",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 0 },
+      "targets": [
+        { "expr": "increase(vaultpi_match_exceptions_total[1h])", "legendFormat": "exceptions/h" }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "登录失败次数",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 0 },
+      "targets": [
+        { "expr": "increase(vaultpi_login_failures_total[1h])", "legendFormat": "login fail/h" }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "下单失败次数（按原因）",
+      "type": "timeseries",
+      "gridPos": { "h": 6, "w": 12, "x": 0, "y": 4 },
+      "targets": [
+        { "expr": "rate(vaultpi_order_failures_total[5m])", "legendFormat": "{{reason}}" }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "撮合耗时 P99",
+      "type": "timeseries",
+      "gridPos": { "h": 6, "w": 12, "x": 12, "y": 4 },
+      "targets": [
+        { "expr": "histogram_quantile(0.99, rate(vaultpi_match_duration_seconds_bucket[5m]))", "legendFormat": "P99" }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "JVM 堆内存",
+      "type": "timeseries",
+      "gridPos": { "h": 4, "w": 12, "x": 0, "y": 10 },
+      "targets": [
+        { "expr": "jvm_memory_used_bytes{area=\"heap\"}", "legendFormat": "used" },
+        { "expr": "jvm_memory_max_bytes{area=\"heap\"}", "legendFormat": "max" }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "HikariCP 活跃连接",
+      "type": "timeseries",
+      "gridPos": { "h": 4, "w": 12, "x": 12, "y": 10 },
+      "targets": [
+        { "expr": "hikaricp_connections_active", "legendFormat": "active" },
+        { "expr": "hikaricp_connections_idle", "legendFormat": "idle" }
+      ]
+    }
+  ],
+  "schemaVersion": 38,
+  "timezone": "browser",
+  "refresh": "30s"
+}

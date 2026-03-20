@@ -1,0 +1,112 @@
+# 敏感配置必须通过环境变量提供，无默认弱密码。使用 MySQL 时请设置 SPRING_DATASOURCE_PASSWORD。
+# 环境要求：MySQL 8.0（必须是 8.0！不可用 5.7）、Redis、JDK 17。
+# 本地开发可加 -Dspring.profiles.active=dev 使用 H2 内存库（无需 MySQL/Redis 密码）。
+# 多时区：生产建议 serverTimezone=UTC，前端按用户浏览器时区展示，符合欧洲等多地区需求。
+server:
+  port: 8081
+
+spring:
+  application:
+    name: vault-pi
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://127.0.0.1:3306/vaultpi?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&allowPublicKeyRetrieval=true}
+  messages:
+    basename: messages
+    encoding: UTF-8
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+  data:
+    redis:
+      host: ${SPRING_REDIS_HOST:127.0.0.1}
+      port: ${SPRING_REDIS_PORT:6379}
+      password: ${SPRING_REDIS_PASSWORD:}
+  # 会话存储到 Redis，支持多实例水平扩展（集群部署会话共享）
+  session:
+    store-type: redis
+    timeout: 30m
+  # 无匹配 Controller 时抛出 NoResourceFoundException，便于统一返回「接口不存在」提示
+  mvc:
+    throw-exception-if-no-handler-found: true
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 1
+
+# 上传文件保存目录（相对项目根目录），可通过环境变量覆盖
+app:
+  upload:
+    dir: ./uploads
+
+# 开发环境：允许自动创建默认管理员 admin/admin123；生产环境必须在 application-prod 中设为 false，并通过独立脚本创建管理员
+vaultpi:
+  bootstrap:
+    create-default-admin: true
+  security:
+    expose-error-message: false
+    # CSP：限制资源加载，防御 XSS/注入；API 后端可禁止脚本与 object
+    csp: "default-src 'self'; script-src 'none'; object-src 'none'; base-uri 'self'"
+    hsts-max-age: 31536000
+    hsts-enabled: false   # 生产环境在 application-prod 中设为 true
+  # 接口防刷：IP 级别限流（登录/注册/下单），基于 Redis 令牌桶，防止恶意爆破
+  ratelimit:
+    enabled: true
+    login-per-min: 60
+    register-per-min: 5
+    order-per-min: 30
+  # 行情熔断：超过 10s 无更新则告警并推送「行情维护中」；可选 Webhook（如 Slack）通知
+  market:
+    circuit-breaker:
+      webhook-url: ${VAULTPI_MARKET_CIRCUIT_WEBHOOK_URL:}
+  # 虚拟盘引擎：K 线历史条数、默认价格区间（用于未配置 customPrice 的虚拟对）、是否混入外部熵降低可预测性
+  virtual:
+    kline-history-bars: 500
+    default-price-low: 60
+    default-price-high: 120
+    entropy-noise-enabled: true
+    dynamic-volatility-enabled: true
+    ou-mode-enabled: true
+
+# Actuator + Prometheus 指标（生产可仅暴露 health、prometheus）
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+  endpoint:
+    health:
+      show-details: always
+  health:
+    db:
+      enabled: true
+    redis:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# Springdoc OpenAPI：在线文档 /swagger-ui.html，JSON /v3/api-docs
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+# 开发环境可开启
+# logging:
+#   level:
+#     com.vaultpi: debug
+# 找回密码：开发时可设固定验证码，如 123456，不设则随机 6 位并需真实发邮件
+# app:
+#   reset-password:
+#     dev-code: "123456"
+

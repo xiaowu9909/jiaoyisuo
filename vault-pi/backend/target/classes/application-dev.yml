@@ -1,0 +1,36 @@
+# 本地开发：无需 MySQL/Redis，使用 H2 内存库（数据重启丢失）
+server:
+  port: 8081
+spring:
+  datasource:
+    url: jdbc:h2:mem:vaultpi;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_LOWER=TRUE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+  flyway:
+    enabled: false   # H2 下由 JPA 建表，避免 V2 索引脚本找不到表
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+  # 开发/测试环境使用内存会话，无需 Redis；生产使用 application.yml 的 store-type: redis
+  session:
+    store-type: default
+
+# 开发/测试可不启用 Redisson 分布式锁，避免强依赖 Redis
+vaultpi:
+  distributed-lock:
+    enabled: false
+
+# CORS：前台 5173、管理端 5174
+app:
+  cors:
+    allowed-origins: http://localhost:5173,http://127.0.0.1:5173,http://localhost:5174,http://127.0.0.1:5174
+
+# 开发时若未启 Redis 会报 500。请先启动 Redis：redis-server 或 brew services start redis
+# 若确需无 Redis 运行，可取消下一行注释（限流/找回密码/行情缓存不可用）
+# spring.autoconfigure.exclude: org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration

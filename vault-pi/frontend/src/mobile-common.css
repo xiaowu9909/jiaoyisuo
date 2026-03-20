@@ -1,0 +1,59 @@
+/**
+ * 移动端全局按钮与控件统一样式，与 MobileButton 组件保持一致
+ * 使用方式：<button class="m-btn tab"> 或 <button class="m-btn gray">
+ */
+.m-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  outline: none;
+  gap: 8px;
+  user-select: none;
+  font-family: inherit;
+}
+
+.m-btn.block { width: 100%; }
+
+/* Tab 型（导航/切换） */
+.m-btn.tab {
+  background: none;
+  color: #94a3b8;
+  padding: 14px 16px;
+  border-radius: 0;
+  border-bottom: 2px solid transparent;
+}
+.m-btn.tab.active {
+  color: #3b82f6;
+  border-bottom-color: #3b82f6;
+}
+.m-btn.tab:active { opacity: 0.85; }
+
+/* 灰色次要按钮 */
+.m-btn.gray {
+  background: #334155;
+  color: #cbd5e1;
+}
+.m-btn.gray:active:not(:disabled) {
+  background: #1e293b;
+  transform: scale(0.98);
+}
+
+/* 主色、成功、危险（与 MobileButton 一致，供原生 button 使用） */
+.m-btn.primary { background: #3b82f6; color: #fff; }
+.m-btn.primary:active:not(:disabled) { background: #2563eb; transform: scale(0.98); }
+.m-btn.success { background: #0ecb81; color: #fff; }
+.m-btn.success:active:not(:disabled) { background: #0ca66b; transform: scale(0.98); }
+.m-btn.danger { background: #f6465d; color: #fff; }
+.m-btn.danger:active:not(:disabled) { background: #d93e52; transform: scale(0.98); }
+
+.m-btn:disabled, .m-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

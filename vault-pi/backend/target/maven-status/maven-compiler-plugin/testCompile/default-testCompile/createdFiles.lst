@@ -1,0 +1,7 @@
+com/vaultpi/common/PasswordPolicyTest.class
+com/vaultpi/asset/service/WalletServiceTest.class
+com/vaultpi/controller/HealthControllerTest.class
+com/vaultpi/common/ResultAndErrorCodeTest.class
+com/vaultpi/futures/dto/FuturesOrderAddRequestTest.class
+com/vaultpi/user/dto/LoginRequestTest.class
+com/vaultpi/exchange/dto/OrderAddRequestTest.class

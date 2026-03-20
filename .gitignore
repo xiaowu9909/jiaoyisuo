@@ -1,0 +1,8 @@
+.DS_Store
+
+/.cursor/
+/.vscode/
+
+# macOS
+*.DS_Store
+

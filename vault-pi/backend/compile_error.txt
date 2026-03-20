@@ -1,0 +1,638 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------------< com.vaultpi:vault-pi-backend >--------------------
+[INFO] Building vault-pi-backend 1.0.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.3.2:clean (default-clean) @ vault-pi-backend ---
+[INFO] Deleting /Users/macmini/Desktop/11/vault-pi/backend/target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ vault-pi-backend ---
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ vault-pi-backend ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 61 source files with javac [debug release 17] to target/classes
+[INFO] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/market/controller/MarketController.java: /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/market/controller/MarketController.java uses unchecked or unsafe operations.
+[INFO] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/market/controller/MarketController.java: Recompile with -Xlint:unchecked for details.
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/futures/controller/FuturesOrderController.java:[207,27] method closePosition(java.util.Map<java.lang.String,java.lang.String>,jakarta.servlet.http.HttpSession) is already defined in class com.vaultpi.futures.controller.FuturesOrderController
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[51,18] cannot find symbol
+  symbol:   method setUsername(java.lang.String)
+  location: variable admin of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[52,18] cannot find symbol
+  symbol:   method setPassword(java.lang.String)
+  location: variable admin of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[53,18] cannot find symbol
+  symbol:   method setEmail(java.lang.String)
+  location: variable admin of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[54,18] cannot find symbol
+  symbol:   method setStatus(java.lang.String)
+  location: variable admin of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[55,18] cannot find symbol
+  symbol:   method setRole(java.lang.String)
+  location: variable admin of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[56,18] cannot find symbol
+  symbol:   method setRegistrationTime(java.time.Instant)
+  location: variable admin of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[75,15] cannot find symbol
+  symbol:   method setTitle(java.lang.String)
+  location: variable a1 of type com.vaultpi.content.entity.Announcement
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[76,15] cannot find symbol
+  symbol:   method setContent(java.lang.String)
+  location: variable a1 of type com.vaultpi.content.entity.Announcement
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[77,15] cannot find symbol
+  symbol:   method setLang(java.lang.String)
+  location: variable a1 of type com.vaultpi.content.entity.Announcement
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[80,15] cannot find symbol
+  symbol:   method setTitle(java.lang.String)
+  location: variable a2 of type com.vaultpi.content.entity.Announcement
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[81,15] cannot find symbol
+  symbol:   method setContent(java.lang.String)
+  location: variable a2 of type com.vaultpi.content.entity.Announcement
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[82,15] cannot find symbol
+  symbol:   method setLang(java.lang.String)
+  location: variable a2 of type com.vaultpi.content.entity.Announcement
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[87,15] cannot find symbol
+  symbol:   method setTitle(java.lang.String)
+  location: variable h1 of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[88,15] cannot find symbol
+  symbol:   method setClassification(java.lang.String)
+  location: variable h1 of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[89,15] cannot find symbol
+  symbol:   method setContent(java.lang.String)
+  location: variable h1 of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[90,15] cannot find symbol
+  symbol:   method setLang(java.lang.String)
+  location: variable h1 of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[91,15] cannot find symbol
+  symbol:   method setSort(int)
+  location: variable h1 of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[94,15] cannot find symbol
+  symbol:   method setTitle(java.lang.String)
+  location: variable h2 of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[95,15] cannot find symbol
+  symbol:   method setClassification(java.lang.String)
+  location: variable h2 of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[96,15] cannot find symbol
+  symbol:   method setContent(java.lang.String)
+  location: variable h2 of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[97,15] cannot find symbol
+  symbol:   method setLang(java.lang.String)
+  location: variable h2 of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[98,15] cannot find symbol
+  symbol:   method setSort(int)
+  location: variable h2 of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[101,15] cannot find symbol
+  symbol:   method setTitle(java.lang.String)
+  location: variable h3 of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[102,15] cannot find symbol
+  symbol:   method setClassification(java.lang.String)
+  location: variable h3 of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[103,15] cannot find symbol
+  symbol:   method setContent(java.lang.String)
+  location: variable h3 of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[104,15] cannot find symbol
+  symbol:   method setLang(java.lang.String)
+  location: variable h3 of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[105,15] cannot find symbol
+  symbol:   method setSort(int)
+  location: variable h3 of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[112,10] cannot find symbol
+  symbol:   method setUnit(java.lang.String)
+  location: variable c of type com.vaultpi.asset.entity.Coin
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[113,10] cannot find symbol
+  symbol:   method setName(java.lang.String)
+  location: variable c of type com.vaultpi.asset.entity.Coin
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[114,10] cannot find symbol
+  symbol:   method setEnable(boolean)
+  location: variable c of type com.vaultpi.asset.entity.Coin
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[120,10] cannot find symbol
+  symbol:   method setSymbol(java.lang.String)
+  location: variable e of type com.vaultpi.market.entity.ExchangeCoin
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[121,10] cannot find symbol
+  symbol:   method setBaseSymbol(java.lang.String)
+  location: variable e of type com.vaultpi.market.entity.ExchangeCoin
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[122,10] cannot find symbol
+  symbol:   method setCoinSymbol(java.lang.String)
+  location: variable e of type com.vaultpi.market.entity.ExchangeCoin
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[123,10] cannot find symbol
+  symbol:   method setEnable(boolean)
+  location: variable e of type com.vaultpi.market.entity.ExchangeCoin
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/market/controller/MarketController.java:[62,30] cannot find symbol
+  symbol:   method getSymbol()
+  location: variable c of type com.vaultpi.market.entity.ExchangeCoin
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/market/controller/MarketController.java:[66,34] cannot find symbol
+  symbol:   method getBaseSymbol()
+  location: variable c of type com.vaultpi.market.entity.ExchangeCoin
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/market/controller/MarketController.java:[67,34] cannot find symbol
+  symbol:   method getCoinSymbol()
+  location: variable c of type com.vaultpi.market.entity.ExchangeCoin
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/market/controller/MarketController.java:[217,34] cannot find symbol
+  symbol:   method getAmount()
+  location: variable o of type com.vaultpi.exchange.entity.ExchangeOrder
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/market/controller/MarketController.java:[217,57] cannot find symbol
+  symbol:   method getTradedAmount()
+  location: variable o of type com.vaultpi.exchange.entity.ExchangeOrder
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/market/controller/MarketController.java:[219,31] cannot find symbol
+  symbol:   method getPrice()
+  location: variable o of type com.vaultpi.exchange.entity.ExchangeOrder
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/market/controller/MarketController.java:[223,34] cannot find symbol
+  symbol:   method getAmount()
+  location: variable o of type com.vaultpi.exchange.entity.ExchangeOrder
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/market/controller/MarketController.java:[223,57] cannot find symbol
+  symbol:   method getTradedAmount()
+  location: variable o of type com.vaultpi.exchange.entity.ExchangeOrder
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/market/controller/MarketController.java:[225,31] cannot find symbol
+  symbol:   method getPrice()
+  location: variable o of type com.vaultpi.exchange.entity.ExchangeOrder
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/market/controller/MarketController.java:[263,23] cannot find symbol
+  symbol:   method getPrice()
+  location: variable t of type com.vaultpi.exchange.entity.ExchangeTrade
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/market/controller/MarketController.java:[264,24] cannot find symbol
+  symbol:   method getAmount()
+  location: variable t of type com.vaultpi.exchange.entity.ExchangeTrade
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/market/controller/MarketController.java:[265,27] cannot find symbol
+  symbol:   method getDirection()
+  location: variable t of type com.vaultpi.exchange.entity.ExchangeTrade
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/market/controller/MarketController.java:[266,22] cannot find symbol
+  symbol:   method getCreateTime()
+  location: variable t of type com.vaultpi.exchange.entity.ExchangeTrade
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/market/controller/MarketController.java:[266,50] cannot find symbol
+  symbol:   method getCreateTime()
+  location: variable t of type com.vaultpi.exchange.entity.ExchangeTrade
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/common/Result.java:[16,16] cannot infer type arguments for com.vaultpi.common.Result<>
+  reason: cannot infer type-variable(s) T
+    (actual and formal argument lists differ in length)
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/common/Result.java:[24,16] cannot infer type arguments for com.vaultpi.common.Result<>
+  reason: cannot infer type-variable(s) T
+    (actual and formal argument lists differ in length)
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/futures/task/FuturesLiquidationTask.java:[39,36] invalid method reference
+  cannot find symbol
+    symbol:   method getSymbol()
+    location: class com.vaultpi.futures.entity.ContractPosition
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/futures/task/FuturesLiquidationTask.java:[44,31] cannot find symbol
+  symbol:   method getSymbol()
+  location: variable p of type com.vaultpi.futures.entity.ContractPosition
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/futures/task/FuturesLiquidationTask.java:[47,42] cannot find symbol
+  symbol:   method getDirection()
+  location: variable pos of type com.vaultpi.futures.entity.ContractPosition
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/futures/task/FuturesLiquidationTask.java:[48,56] cannot find symbol
+  symbol:   method getAvgPrice()
+  location: variable pos of type com.vaultpi.futures.entity.ContractPosition
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/futures/task/FuturesLiquidationTask.java:[48,84] cannot find symbol
+  symbol:   method getVolume()
+  location: variable pos of type com.vaultpi.futures.entity.ContractPosition
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/futures/task/FuturesLiquidationTask.java:[50,34] cannot find symbol
+  symbol:   method getAvgPrice()
+  location: variable pos of type com.vaultpi.futures.entity.ContractPosition
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/futures/task/FuturesLiquidationTask.java:[50,84] cannot find symbol
+  symbol:   method getVolume()
+  location: variable pos of type com.vaultpi.futures.entity.ContractPosition
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/futures/task/FuturesLiquidationTask.java:[53,44] cannot find symbol
+  symbol:   method getMargin()
+  location: variable pos of type com.vaultpi.futures.entity.ContractPosition
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/futures/task/FuturesLiquidationTask.java:[57,25] cannot find symbol
+  symbol:   variable log
+  location: class com.vaultpi.futures.task.FuturesLiquidationTask
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/futures/task/FuturesLiquidationTask.java:[57,85] cannot find symbol
+  symbol:   method getId()
+  location: variable pos of type com.vaultpi.futures.entity.ContractPosition
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/futures/task/FuturesLiquidationTask.java:[57,98] cannot find symbol
+  symbol:   method getMargin()
+  location: variable pos of type com.vaultpi.futures.entity.ContractPosition
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/futures/task/FuturesLiquidationTask.java:[58,28] cannot find symbol
+  symbol:   method setStatus(java.lang.String)
+  location: variable pos of type com.vaultpi.futures.entity.ContractPosition
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/futures/task/FuturesLiquidationTask.java:[60,47] cannot find symbol
+  symbol:   method getMargin()
+  location: variable pos of type com.vaultpi.futures.entity.ContractPosition
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/futures/task/FuturesLiquidationTask.java:[78,13] cannot find symbol
+  symbol:   variable log
+  location: class com.vaultpi.futures.task.FuturesLiquidationTask
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/user/ResetPasswordController.java:[81,44] cannot find symbol
+  symbol:   method getId()
+  location: variable member of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/user/service/MemberService.java:[55,15] cannot find symbol
+  symbol:   method setEmail(java.lang.String)
+  location: variable member of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/user/service/MemberService.java:[56,15] cannot find symbol
+  symbol:   method setUsername(java.lang.String)
+  location: variable member of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/user/service/MemberService.java:[57,15] cannot find symbol
+  symbol:   method setPassword(java.lang.String)
+  location: variable member of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/user/service/MemberService.java:[58,15] cannot find symbol
+  symbol:   method setStatus(java.lang.String)
+  location: variable member of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/user/service/MemberService.java:[59,15] cannot find symbol
+  symbol:   method setRegistrationTime(java.time.Instant)
+  location: variable member of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/user/service/MemberService.java:[60,15] cannot find symbol
+  symbol:   method setInviteCode(java.lang.String)
+  location: variable member of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/user/service/MemberService.java:[63,43] cannot find symbol
+  symbol:   method getId()
+  location: variable inviter of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/user/service/MemberService.java:[71,32] cannot find symbol
+  symbol:   method getId()
+  location: variable saved of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/user/service/MemberService.java:[72,29] cannot find symbol
+  symbol:   method getId()
+  location: variable coin of type com.vaultpi.asset.entity.Coin
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/user/service/MemberService.java:[73,14] cannot find symbol
+  symbol:   method setBalance(java.math.BigDecimal)
+  location: variable w of type com.vaultpi.asset.entity.MemberWallet
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/user/service/MemberService.java:[74,14] cannot find symbol
+  symbol:   method setFrozenBalance(java.math.BigDecimal)
+  location: variable w of type com.vaultpi.asset.entity.MemberWallet
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/user/service/MemberService.java:[91,36] cannot find symbol
+  symbol:   method getStatus()
+  location: variable member of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/user/service/MemberService.java:[94,57] cannot find symbol
+  symbol:   method getPassword()
+  location: variable member of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/user/service/MemberService.java:[97,15] cannot find symbol
+  symbol:   method setLastLoginTime(java.time.Instant)
+  location: variable member of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/user/service/MemberService.java:[115,15] cannot find symbol
+  symbol:   method setPassword(java.lang.String)
+  location: variable member of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/content/HelpController.java:[49,18] invalid method reference
+  cannot find symbol
+    symbol:   method getClassification()
+    location: class com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/content/HelpController.java:[60,43] cannot find symbol
+  symbol:   method getStatus()
+  location: variable h of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/content/HelpController.java:[66,24] cannot find symbol
+  symbol:   method getCreateTime()
+  location: variable h of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/content/HelpController.java:[67,121] cannot find symbol
+  symbol:   method getCreateTime()
+  location: variable h of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/content/HelpController.java:[70,20] cannot find symbol
+  symbol:   method getId()
+  location: variable h of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/content/HelpController.java:[71,23] cannot find symbol
+  symbol:   method getTitle()
+  location: variable h of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/content/HelpController.java:[71,46] cannot find symbol
+  symbol:   method getTitle()
+  location: variable h of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/content/HelpController.java:[72,32] cannot find symbol
+  symbol:   method getClassification()
+  location: variable h of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/content/HelpController.java:[72,64] cannot find symbol
+  symbol:   method getClassification()
+  location: variable h of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/content/HelpController.java:[73,25] cannot find symbol
+  symbol:   method getContent()
+  location: variable h of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/content/HelpController.java:[73,50] cannot find symbol
+  symbol:   method getContent()
+  location: variable h of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/content/HelpController.java:[74,22] cannot find symbol
+  symbol:   method getSort()
+  location: variable h of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/content/HelpController.java:[75,23] cannot find symbol
+  symbol:   method getIsTop()
+  location: variable h of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/content/HelpController.java:[75,46] cannot find symbol
+  symbol:   method getIsTop()
+  location: variable h of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/admin/controller/AdminMemberController.java:[44,27] cannot find symbol
+  symbol:   method getId()
+  location: variable m of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/admin/controller/AdminMemberController.java:[45,33] cannot find symbol
+  symbol:   method getUsername()
+  location: variable m of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/admin/controller/AdminMemberController.java:[46,30] cannot find symbol
+  symbol:   method getEmail()
+  location: variable m of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/admin/controller/AdminMemberController.java:[47,30] cannot find symbol
+  symbol:   method getPhone()
+  location: variable m of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/admin/controller/AdminMemberController.java:[48,33] cannot find symbol
+  symbol:   method getNickname()
+  location: variable m of type com.vaultpi.user.entity.Member
+[INFO] 100 errors 
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.000 s
+[INFO] Finished at: 2026-03-07T04:38:24+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.11.0:compile (default-compile) on project vault-pi-backend: Compilation failure: Compilation failure: 
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/futures/controller/FuturesOrderController.java:[207,27] method closePosition(java.util.Map<java.lang.String,java.lang.String>,jakarta.servlet.http.HttpSession) is already defined in class com.vaultpi.futures.controller.FuturesOrderController
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[51,18] cannot find symbol
+[ERROR]   symbol:   method setUsername(java.lang.String)
+[ERROR]   location: variable admin of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[52,18] cannot find symbol
+[ERROR]   symbol:   method setPassword(java.lang.String)
+[ERROR]   location: variable admin of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[53,18] cannot find symbol
+[ERROR]   symbol:   method setEmail(java.lang.String)
+[ERROR]   location: variable admin of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[54,18] cannot find symbol
+[ERROR]   symbol:   method setStatus(java.lang.String)
+[ERROR]   location: variable admin of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[55,18] cannot find symbol
+[ERROR]   symbol:   method setRole(java.lang.String)
+[ERROR]   location: variable admin of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[56,18] cannot find symbol
+[ERROR]   symbol:   method setRegistrationTime(java.time.Instant)
+[ERROR]   location: variable admin of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[75,15] cannot find symbol
+[ERROR]   symbol:   method setTitle(java.lang.String)
+[ERROR]   location: variable a1 of type com.vaultpi.content.entity.Announcement
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[76,15] cannot find symbol
+[ERROR]   symbol:   method setContent(java.lang.String)
+[ERROR]   location: variable a1 of type com.vaultpi.content.entity.Announcement
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[77,15] cannot find symbol
+[ERROR]   symbol:   method setLang(java.lang.String)
+[ERROR]   location: variable a1 of type com.vaultpi.content.entity.Announcement
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[80,15] cannot find symbol
+[ERROR]   symbol:   method setTitle(java.lang.String)
+[ERROR]   location: variable a2 of type com.vaultpi.content.entity.Announcement
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[81,15] cannot find symbol
+[ERROR]   symbol:   method setContent(java.lang.String)
+[ERROR]   location: variable a2 of type com.vaultpi.content.entity.Announcement
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[82,15] cannot find symbol
+[ERROR]   symbol:   method setLang(java.lang.String)
+[ERROR]   location: variable a2 of type com.vaultpi.content.entity.Announcement
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[87,15] cannot find symbol
+[ERROR]   symbol:   method setTitle(java.lang.String)
+[ERROR]   location: variable h1 of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[88,15] cannot find symbol
+[ERROR]   symbol:   method setClassification(java.lang.String)
+[ERROR]   location: variable h1 of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[89,15] cannot find symbol
+[ERROR]   symbol:   method setContent(java.lang.String)
+[ERROR]   location: variable h1 of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[90,15] cannot find symbol
+[ERROR]   symbol:   method setLang(java.lang.String)
+[ERROR]   location: variable h1 of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[91,15] cannot find symbol
+[ERROR]   symbol:   method setSort(int)
+[ERROR]   location: variable h1 of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[94,15] cannot find symbol
+[ERROR]   symbol:   method setTitle(java.lang.String)
+[ERROR]   location: variable h2 of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[95,15] cannot find symbol
+[ERROR]   symbol:   method setClassification(java.lang.String)
+[ERROR]   location: variable h2 of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[96,15] cannot find symbol
+[ERROR]   symbol:   method setContent(java.lang.String)
+[ERROR]   location: variable h2 of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[97,15] cannot find symbol
+[ERROR]   symbol:   method setLang(java.lang.String)
+[ERROR]   location: variable h2 of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[98,15] cannot find symbol
+[ERROR]   symbol:   method setSort(int)
+[ERROR]   location: variable h2 of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[101,15] cannot find symbol
+[ERROR]   symbol:   method setTitle(java.lang.String)
+[ERROR]   location: variable h3 of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[102,15] cannot find symbol
+[ERROR]   symbol:   method setClassification(java.lang.String)
+[ERROR]   location: variable h3 of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[103,15] cannot find symbol
+[ERROR]   symbol:   method setContent(java.lang.String)
+[ERROR]   location: variable h3 of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[104,15] cannot find symbol
+[ERROR]   symbol:   method setLang(java.lang.String)
+[ERROR]   location: variable h3 of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[105,15] cannot find symbol
+[ERROR]   symbol:   method setSort(int)
+[ERROR]   location: variable h3 of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[112,10] cannot find symbol
+[ERROR]   symbol:   method setUnit(java.lang.String)
+[ERROR]   location: variable c of type com.vaultpi.asset.entity.Coin
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[113,10] cannot find symbol
+[ERROR]   symbol:   method setName(java.lang.String)
+[ERROR]   location: variable c of type com.vaultpi.asset.entity.Coin
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[114,10] cannot find symbol
+[ERROR]   symbol:   method setEnable(boolean)
+[ERROR]   location: variable c of type com.vaultpi.asset.entity.Coin
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[120,10] cannot find symbol
+[ERROR]   symbol:   method setSymbol(java.lang.String)
+[ERROR]   location: variable e of type com.vaultpi.market.entity.ExchangeCoin
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[121,10] cannot find symbol
+[ERROR]   symbol:   method setBaseSymbol(java.lang.String)
+[ERROR]   location: variable e of type com.vaultpi.market.entity.ExchangeCoin
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[122,10] cannot find symbol
+[ERROR]   symbol:   method setCoinSymbol(java.lang.String)
+[ERROR]   location: variable e of type com.vaultpi.market.entity.ExchangeCoin
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/config/DataInitializer.java:[123,10] cannot find symbol
+[ERROR]   symbol:   method setEnable(boolean)
+[ERROR]   location: variable e of type com.vaultpi.market.entity.ExchangeCoin
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/market/controller/MarketController.java:[62,30] cannot find symbol
+[ERROR]   symbol:   method getSymbol()
+[ERROR]   location: variable c of type com.vaultpi.market.entity.ExchangeCoin
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/market/controller/MarketController.java:[66,34] cannot find symbol
+[ERROR]   symbol:   method getBaseSymbol()
+[ERROR]   location: variable c of type com.vaultpi.market.entity.ExchangeCoin
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/market/controller/MarketController.java:[67,34] cannot find symbol
+[ERROR]   symbol:   method getCoinSymbol()
+[ERROR]   location: variable c of type com.vaultpi.market.entity.ExchangeCoin
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/market/controller/MarketController.java:[217,34] cannot find symbol
+[ERROR]   symbol:   method getAmount()
+[ERROR]   location: variable o of type com.vaultpi.exchange.entity.ExchangeOrder
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/market/controller/MarketController.java:[217,57] cannot find symbol
+[ERROR]   symbol:   method getTradedAmount()
+[ERROR]   location: variable o of type com.vaultpi.exchange.entity.ExchangeOrder
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/market/controller/MarketController.java:[219,31] cannot find symbol
+[ERROR]   symbol:   method getPrice()
+[ERROR]   location: variable o of type com.vaultpi.exchange.entity.ExchangeOrder
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/market/controller/MarketController.java:[223,34] cannot find symbol
+[ERROR]   symbol:   method getAmount()
+[ERROR]   location: variable o of type com.vaultpi.exchange.entity.ExchangeOrder
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/market/controller/MarketController.java:[223,57] cannot find symbol
+[ERROR]   symbol:   method getTradedAmount()
+[ERROR]   location: variable o of type com.vaultpi.exchange.entity.ExchangeOrder
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/market/controller/MarketController.java:[225,31] cannot find symbol
+[ERROR]   symbol:   method getPrice()
+[ERROR]   location: variable o of type com.vaultpi.exchange.entity.ExchangeOrder
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/market/controller/MarketController.java:[263,23] cannot find symbol
+[ERROR]   symbol:   method getPrice()
+[ERROR]   location: variable t of type com.vaultpi.exchange.entity.ExchangeTrade
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/market/controller/MarketController.java:[264,24] cannot find symbol
+[ERROR]   symbol:   method getAmount()
+[ERROR]   location: variable t of type com.vaultpi.exchange.entity.ExchangeTrade
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/market/controller/MarketController.java:[265,27] cannot find symbol
+[ERROR]   symbol:   method getDirection()
+[ERROR]   location: variable t of type com.vaultpi.exchange.entity.ExchangeTrade
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/market/controller/MarketController.java:[266,22] cannot find symbol
+[ERROR]   symbol:   method getCreateTime()
+[ERROR]   location: variable t of type com.vaultpi.exchange.entity.ExchangeTrade
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/market/controller/MarketController.java:[266,50] cannot find symbol
+[ERROR]   symbol:   method getCreateTime()
+[ERROR]   location: variable t of type com.vaultpi.exchange.entity.ExchangeTrade
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/common/Result.java:[16,16] cannot infer type arguments for com.vaultpi.common.Result<>
+[ERROR]   reason: cannot infer type-variable(s) T
+[ERROR]     (actual and formal argument lists differ in length)
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/common/Result.java:[24,16] cannot infer type arguments for com.vaultpi.common.Result<>
+[ERROR]   reason: cannot infer type-variable(s) T
+[ERROR]     (actual and formal argument lists differ in length)
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/futures/task/FuturesLiquidationTask.java:[39,36] invalid method reference
+[ERROR]   cannot find symbol
+[ERROR]     symbol:   method getSymbol()
+[ERROR]     location: class com.vaultpi.futures.entity.ContractPosition
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/futures/task/FuturesLiquidationTask.java:[44,31] cannot find symbol
+[ERROR]   symbol:   method getSymbol()
+[ERROR]   location: variable p of type com.vaultpi.futures.entity.ContractPosition
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/futures/task/FuturesLiquidationTask.java:[47,42] cannot find symbol
+[ERROR]   symbol:   method getDirection()
+[ERROR]   location: variable pos of type com.vaultpi.futures.entity.ContractPosition
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/futures/task/FuturesLiquidationTask.java:[48,56] cannot find symbol
+[ERROR]   symbol:   method getAvgPrice()
+[ERROR]   location: variable pos of type com.vaultpi.futures.entity.ContractPosition
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/futures/task/FuturesLiquidationTask.java:[48,84] cannot find symbol
+[ERROR]   symbol:   method getVolume()
+[ERROR]   location: variable pos of type com.vaultpi.futures.entity.ContractPosition
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/futures/task/FuturesLiquidationTask.java:[50,34] cannot find symbol
+[ERROR]   symbol:   method getAvgPrice()
+[ERROR]   location: variable pos of type com.vaultpi.futures.entity.ContractPosition
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/futures/task/FuturesLiquidationTask.java:[50,84] cannot find symbol
+[ERROR]   symbol:   method getVolume()
+[ERROR]   location: variable pos of type com.vaultpi.futures.entity.ContractPosition
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/futures/task/FuturesLiquidationTask.java:[53,44] cannot find symbol
+[ERROR]   symbol:   method getMargin()
+[ERROR]   location: variable pos of type com.vaultpi.futures.entity.ContractPosition
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/futures/task/FuturesLiquidationTask.java:[57,25] cannot find symbol
+[ERROR]   symbol:   variable log
+[ERROR]   location: class com.vaultpi.futures.task.FuturesLiquidationTask
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/futures/task/FuturesLiquidationTask.java:[57,85] cannot find symbol
+[ERROR]   symbol:   method getId()
+[ERROR]   location: variable pos of type com.vaultpi.futures.entity.ContractPosition
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/futures/task/FuturesLiquidationTask.java:[57,98] cannot find symbol
+[ERROR]   symbol:   method getMargin()
+[ERROR]   location: variable pos of type com.vaultpi.futures.entity.ContractPosition
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/futures/task/FuturesLiquidationTask.java:[58,28] cannot find symbol
+[ERROR]   symbol:   method setStatus(java.lang.String)
+[ERROR]   location: variable pos of type com.vaultpi.futures.entity.ContractPosition
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/futures/task/FuturesLiquidationTask.java:[60,47] cannot find symbol
+[ERROR]   symbol:   method getMargin()
+[ERROR]   location: variable pos of type com.vaultpi.futures.entity.ContractPosition
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/futures/task/FuturesLiquidationTask.java:[78,13] cannot find symbol
+[ERROR]   symbol:   variable log
+[ERROR]   location: class com.vaultpi.futures.task.FuturesLiquidationTask
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/user/ResetPasswordController.java:[81,44] cannot find symbol
+[ERROR]   symbol:   method getId()
+[ERROR]   location: variable member of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/user/service/MemberService.java:[55,15] cannot find symbol
+[ERROR]   symbol:   method setEmail(java.lang.String)
+[ERROR]   location: variable member of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/user/service/MemberService.java:[56,15] cannot find symbol
+[ERROR]   symbol:   method setUsername(java.lang.String)
+[ERROR]   location: variable member of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/user/service/MemberService.java:[57,15] cannot find symbol
+[ERROR]   symbol:   method setPassword(java.lang.String)
+[ERROR]   location: variable member of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/user/service/MemberService.java:[58,15] cannot find symbol
+[ERROR]   symbol:   method setStatus(java.lang.String)
+[ERROR]   location: variable member of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/user/service/MemberService.java:[59,15] cannot find symbol
+[ERROR]   symbol:   method setRegistrationTime(java.time.Instant)
+[ERROR]   location: variable member of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/user/service/MemberService.java:[60,15] cannot find symbol
+[ERROR]   symbol:   method setInviteCode(java.lang.String)
+[ERROR]   location: variable member of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/user/service/MemberService.java:[63,43] cannot find symbol
+[ERROR]   symbol:   method getId()
+[ERROR]   location: variable inviter of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/user/service/MemberService.java:[71,32] cannot find symbol
+[ERROR]   symbol:   method getId()
+[ERROR]   location: variable saved of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/user/service/MemberService.java:[72,29] cannot find symbol
+[ERROR]   symbol:   method getId()
+[ERROR]   location: variable coin of type com.vaultpi.asset.entity.Coin
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/user/service/MemberService.java:[73,14] cannot find symbol
+[ERROR]   symbol:   method setBalance(java.math.BigDecimal)
+[ERROR]   location: variable w of type com.vaultpi.asset.entity.MemberWallet
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/user/service/MemberService.java:[74,14] cannot find symbol
+[ERROR]   symbol:   method setFrozenBalance(java.math.BigDecimal)
+[ERROR]   location: variable w of type com.vaultpi.asset.entity.MemberWallet
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/user/service/MemberService.java:[91,36] cannot find symbol
+[ERROR]   symbol:   method getStatus()
+[ERROR]   location: variable member of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/user/service/MemberService.java:[94,57] cannot find symbol
+[ERROR]   symbol:   method getPassword()
+[ERROR]   location: variable member of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/user/service/MemberService.java:[97,15] cannot find symbol
+[ERROR]   symbol:   method setLastLoginTime(java.time.Instant)
+[ERROR]   location: variable member of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/user/service/MemberService.java:[115,15] cannot find symbol
+[ERROR]   symbol:   method setPassword(java.lang.String)
+[ERROR]   location: variable member of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/content/HelpController.java:[49,18] invalid method reference
+[ERROR]   cannot find symbol
+[ERROR]     symbol:   method getClassification()
+[ERROR]     location: class com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/content/HelpController.java:[60,43] cannot find symbol
+[ERROR]   symbol:   method getStatus()
+[ERROR]   location: variable h of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/content/HelpController.java:[66,24] cannot find symbol
+[ERROR]   symbol:   method getCreateTime()
+[ERROR]   location: variable h of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/content/HelpController.java:[67,121] cannot find symbol
+[ERROR]   symbol:   method getCreateTime()
+[ERROR]   location: variable h of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/content/HelpController.java:[70,20] cannot find symbol
+[ERROR]   symbol:   method getId()
+[ERROR]   location: variable h of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/content/HelpController.java:[71,23] cannot find symbol
+[ERROR]   symbol:   method getTitle()
+[ERROR]   location: variable h of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/content/HelpController.java:[71,46] cannot find symbol
+[ERROR]   symbol:   method getTitle()
+[ERROR]   location: variable h of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/content/HelpController.java:[72,32] cannot find symbol
+[ERROR]   symbol:   method getClassification()
+[ERROR]   location: variable h of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/content/HelpController.java:[72,64] cannot find symbol
+[ERROR]   symbol:   method getClassification()
+[ERROR]   location: variable h of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/content/HelpController.java:[73,25] cannot find symbol
+[ERROR]   symbol:   method getContent()
+[ERROR]   location: variable h of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/content/HelpController.java:[73,50] cannot find symbol
+[ERROR]   symbol:   method getContent()
+[ERROR]   location: variable h of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/content/HelpController.java:[74,22] cannot find symbol
+[ERROR]   symbol:   method getSort()
+[ERROR]   location: variable h of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/content/HelpController.java:[75,23] cannot find symbol
+[ERROR]   symbol:   method getIsTop()
+[ERROR]   location: variable h of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/content/HelpController.java:[75,46] cannot find symbol
+[ERROR]   symbol:   method getIsTop()
+[ERROR]   location: variable h of type com.vaultpi.content.entity.SysHelp
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/admin/controller/AdminMemberController.java:[44,27] cannot find symbol
+[ERROR]   symbol:   method getId()
+[ERROR]   location: variable m of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/admin/controller/AdminMemberController.java:[45,33] cannot find symbol
+[ERROR]   symbol:   method getUsername()
+[ERROR]   location: variable m of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/admin/controller/AdminMemberController.java:[46,30] cannot find symbol
+[ERROR]   symbol:   method getEmail()
+[ERROR]   location: variable m of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/admin/controller/AdminMemberController.java:[47,30] cannot find symbol
+[ERROR]   symbol:   method getPhone()
+[ERROR]   location: variable m of type com.vaultpi.user.entity.Member
+[ERROR] /Users/macmini/Desktop/11/vault-pi/backend/src/main/java/com/vaultpi/admin/controller/AdminMemberController.java:[48,33] cannot find symbol
+[ERROR]   symbol:   method getNickname()
+[ERROR]   location: variable m of type com.vaultpi.user.entity.Member
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

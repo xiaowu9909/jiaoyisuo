@@ -1,0 +1,65 @@
+2026-03-08 09:27:28.325[1772933248325] | INFO  | background-preinit | o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+2026-03-08 09:27:28.352[1772933248352] | INFO  | restartedMain | com.vaultpi.VaultPiApplication       - Starting VaultPiApplication using Java 17.0.18 with PID 39464 (/Users/macmini/Desktop/11/vault-pi/backend/target/classes started by macmini in /Users/macmini/Desktop/11/vault-pi/backend)
+2026-03-08 09:27:28.353[1772933248353] | INFO  | restartedMain | com.vaultpi.VaultPiApplication       - No active profile set, falling back to 1 default profile: "default"
+2026-03-08 09:27:28.380[1772933248380] | INFO  | restartedMain | o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-03-08 09:27:28.380[1772933248380] | INFO  | restartedMain | o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-03-08 09:27:28.722[1772933248722] | WARN  | restartedMain | o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.support.BeanDefinitionOverrideException: Invalid bean definition with name 'noOpLockProvider' defined in class path resource [com/vaultpi/config/NoOpLockProvider.class]: Cannot register bean definition [Root bean: class [null]; scope=; abstract=false; lazyInit=null; autowireMode=3; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=noOpLockProvider; factoryMethodName=noOpLockProvider; initMethodNames=null; destroyMethodNames=[(inferred)]; defined in class path resource [com/vaultpi/config/NoOpLockProvider.class]] for bean 'noOpLockProvider' since there is already [Generic bean: class [com.vaultpi.config.NoOpLockProvider]; scope=singleton; abstract=false; lazyInit=null; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodNames=null; destroyMethodNames=null; defined in file [/Users/macmini/Desktop/11/vault-pi/backend/target/classes/com/vaultpi/config/NoOpLockProvider.class]] bound.
+2026-03-08 09:27:28.727[1772933248727] | INFO  | restartedMain | o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-03-08 09:27:28.737[1772933248737] | ERROR | restartedMain | o.s.b.d.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+The bean 'noOpLockProvider', defined in class path resource [com/vaultpi/config/NoOpLockProvider.class], could not be registered. A bean with that name has already been defined in file [/Users/macmini/Desktop/11/vault-pi/backend/target/classes/com/vaultpi/config/NoOpLockProvider.class] and overriding is disabled.
+
+Action:
+
+Consider renaming one of the beans or enabling overriding by setting spring.main.allow-bean-definition-overriding=true
+
+2026-03-08 09:27:37.773[1772933257773] | INFO  | main       | o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+2026-03-08 09:28:16.953[1772933296953] | INFO  | main       | o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+2026-03-08 09:32:27.641[1772933547641] | INFO  | main       | o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+2026-03-08 09:39:48.988[1772933988988] | INFO  | main       | o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+2026-03-08 09:40:28.611[1772934028611] | INFO  | main       | o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+2026-03-08 09:43:00.979[1772934180979] | INFO  | main       | o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+2026-03-08 09:44:46.040[1772934286040] | INFO  | background-preinit | o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+2026-03-08 09:44:46.053[1772934286053] | INFO  | restartedMain | com.vaultpi.VaultPiApplication       - Starting VaultPiApplication using Java 17.0.18 with PID 63186 (/Users/macmini/Desktop/11/vault-pi/backend/target/classes started by macmini in /Users/macmini/Desktop/11/vault-pi/backend)
+2026-03-08 09:44:46.053[1772934286053] | INFO  | restartedMain | com.vaultpi.VaultPiApplication       - No active profile set, falling back to 1 default profile: "default"
+2026-03-08 09:44:46.067[1772934286067] | INFO  | restartedMain | o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-03-08 09:44:46.067[1772934286067] | INFO  | restartedMain | o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-03-08 09:44:46.322[1772934286322] | WARN  | restartedMain | o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.support.BeanDefinitionOverrideException: Invalid bean definition with name 'noOpLockProvider' defined in class path resource [com/vaultpi/config/NoOpLockProvider.class]: Cannot register bean definition [Root bean: class [null]; scope=; abstract=false; lazyInit=null; autowireMode=3; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=noOpLockProvider; factoryMethodName=noOpLockProvider; initMethodNames=null; destroyMethodNames=[(inferred)]; defined in class path resource [com/vaultpi/config/NoOpLockProvider.class]] for bean 'noOpLockProvider' since there is already [Generic bean: class [com.vaultpi.config.NoOpLockProvider]; scope=singleton; abstract=false; lazyInit=null; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodNames=null; destroyMethodNames=null; defined in file [/Users/macmini/Desktop/11/vault-pi/backend/target/classes/com/vaultpi/config/NoOpLockProvider.class]] bound.
+2026-03-08 09:44:46.326[1772934286326] | INFO  | restartedMain | o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-03-08 09:44:46.334[1772934286334] | ERROR | restartedMain | o.s.b.d.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+The bean 'noOpLockProvider', defined in class path resource [com/vaultpi/config/NoOpLockProvider.class], could not be registered. A bean with that name has already been defined in file [/Users/macmini/Desktop/11/vault-pi/backend/target/classes/com/vaultpi/config/NoOpLockProvider.class] and overriding is disabled.
+
+Action:
+
+Consider renaming one of the beans or enabling overriding by setting spring.main.allow-bean-definition-overriding=true
+
+2026-03-08 09:52:20.153[1772934740153] | INFO  | main       | o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+2026-03-08 10:05:14.077[1772935514077] | INFO  | main       | o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+2026-03-08 10:12:26.841[1772935946841] | INFO  | main       | o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+2026-03-08 10:56:44.363[1772938604363] | INFO  | main       | o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+2026-03-08 11:01:58.383[1772938918383] | INFO  | main       | o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+2026-03-08 11:03:57.508[1772939037508] | INFO  | main       | o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+2026-03-08 11:15:17.662[1772939717662] | INFO  | main       | o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+2026-03-08 11:20:59.548[1772940059548] | INFO  | main       | o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+2026-03-08 11:24:56.760[1772940296760] | INFO  | main       | o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+2026-03-08 11:32:59.879[1772940779879] | INFO  | main       | o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+2026-03-08 11:50:35.002[1772941835002] | INFO  | main       | o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+2026-03-08 12:22:30.412[1772943750412] | INFO  | main       | o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final
+2026-03-08 12:22:51.529[1772943771529] | INFO  | main       | o.h.validator.internal.util.Version  - HV000001: Hibernate Validator 8.0.1.Final

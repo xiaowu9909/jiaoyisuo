@@ -1,0 +1,350 @@
+/* C 端个人中心统一布局与样式 */
+.uc-sub,
+.uc-content {
+  color: #fff;
+  max-width: 720px;
+  width: 100%;
+}
+
+.uc-page-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 8px;
+  letter-spacing: 0.02em;
+}
+
+.uc-hint,
+.page-hint {
+  font-size: 13px;
+  color: #828ea1;
+  line-height: 1.5;
+  margin: 0 0 20px;
+}
+
+.page-hint .link,
+.uc-sub .link,
+.uc-content .link {
+  color: #f0a70a;
+  text-decoration: none;
+}
+
+.page-hint .link:hover,
+.uc-sub .link:hover,
+.uc-content .link:hover {
+  text-decoration: underline;
+}
+
+/* 卡片 */
+.uc-sub .safe-card,
+.uc-sub .card,
+.uc-content .card {
+  background: #1e2936;
+  border: 1px solid #27313e;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.uc-sub .card-title,
+.uc-sub .safe-card .card-title,
+.uc-content .card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #e2e8f0;
+  margin: 0 0 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #27313e;
+}
+
+/* 表单行：横向（label 在左） */
+.uc-sub .form-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.uc-sub .form-row:last-child {
+  margin-bottom: 0;
+}
+
+.uc-sub .form-row label {
+  flex: 0 0 80px;
+  font-size: 13px;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.uc-sub .form-row .input {
+  flex: 1;
+  min-width: 160px;
+  max-width: 320px;
+}
+
+/* 表单项：纵向（label 在上） */
+.uc-sub .form-item,
+.uc-content .form-item {
+  margin-bottom: 16px;
+}
+
+.uc-sub .form-item:last-child {
+  margin-bottom: 0;
+}
+
+.uc-sub .form-item label,
+.uc-content .form-item label {
+  display: block;
+  font-size: 13px;
+  color: #94a3b8;
+  margin-bottom: 6px;
+}
+
+.uc-sub .form-row .input,
+.uc-sub .form-item .input,
+.uc-sub .input,
+.uc-content .input {
+  width: 100%;
+  max-width: 320px;
+  padding: 10px 12px;
+  font-size: 14px;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  color: #fff;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.uc-sub .form-row .input:focus,
+.uc-sub .input:focus,
+.uc-content .input:focus {
+  outline: none;
+  border-color: #64748b;
+}
+
+.uc-sub .form-row select.input {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+/* 表格 */
+.uc-sub .uc-table,
+.uc-content .uc-table,
+.uc-content .wallet-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.uc-sub .uc-table th,
+.uc-sub .uc-table td,
+.uc-content .uc-table th,
+.uc-content .uc-table td,
+.uc-content .wallet-table th,
+.uc-content .wallet-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #27313e;
+}
+
+.uc-sub .uc-table th,
+.uc-content .uc-table th,
+.uc-content .wallet-table th {
+  font-weight: 600;
+  color: #94a3b8;
+  background: rgba(15, 23, 42, 0.6);
+}
+
+.uc-sub .uc-table .empty,
+.uc-content .uc-table .empty {
+  color: #64748b;
+  text-align: center;
+  padding: 24px;
+}
+
+/* 信息列表 */
+.uc-sub .info-list {
+  margin: 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px 32px;
+  align-items: center;
+}
+
+.uc-sub .info-list dt {
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+.uc-sub .info-list dd {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* 提示与消息 */
+.uc-sub .msg,
+.uc-content .msg {
+  font-size: 13px;
+  margin: 8px 0 0;
+}
+
+.uc-sub .msg.error,
+.uc-content .error {
+  color: #f87171;
+}
+
+.uc-sub .msg.success {
+  color: #4ade80;
+}
+
+/* 分页 */
+.uc-sub .pagination,
+.uc-content .pagination {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.uc-sub .page-info {
+  font-size: 13px;
+  color: #64748b;
+}
+
+/* 区块标题 */
+.uc-sub .sub-title,
+.uc-sub .cert-section-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #94a3b8;
+  margin: 16px 0 8px;
+}
+
+.uc-sub .cert-section-title {
+  margin: 0 0 8px;
+}
+
+.uc-sub .cert-hint {
+  font-size: 12px;
+  color: #64748b;
+  line-height: 1.5;
+  margin: 0 0 16px;
+}
+
+/* 空状态 */
+.uc-sub .empty-hint,
+.uc-content .no-data {
+  color: #64748b;
+  text-align: center;
+  padding: 32px 16px;
+  margin: 0;
+}
+
+/* 页面头部（标题 + 操作按钮） */
+.uc-content .uc-header,
+.uc-sub .uc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.uc-content .uc-header .uc-page-title,
+.uc-sub .uc-header .uc-page-title {
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+
+  .uc-content,
+  .uc-sub {
+    padding: 0 10px;
+    box-sizing: border-box;
+  }
+
+  .uc-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  .uc-sub .safe-card,
+  .uc-sub .card,
+  .uc-content .card {
+    padding: 16px;
+  }
+
+  .uc-sub .form-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .uc-sub .form-row label {
+    flex: none;
+    width: 100%;
+  }
+
+  .uc-sub .form-row .input,
+  .uc-sub .form-item .input,
+  .uc-sub .input,
+  .uc-content .input {
+    max-width: 100%;
+  }
+
+  .uc-sub .info-list {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .uc-sub .info-list dt {
+    font-size: 13px;
+    margin-bottom: -4px;
+  }
+
+  .uc-sub .info-list dd {
+    font-size: 15px;
+    margin-bottom: 8px;
+  }
+
+  /* Table scroll container */
+  .uc-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 20px;
+    border: 1px solid #27313e;
+    border-radius: 4px;
+    scrollbar-width: none;
+    /* Firefox */
+  }
+
+  .uc-table-wrap::-webkit-scrollbar {
+    display: none;
+    /* Safari and Chrome */
+  }
+
+  .uc-table {
+    min-width: 500px;
+    /* Force scroll if screen is too small */
+  }
+
+  .uc-sub .uc-table th,
+  .uc-sub .uc-table td {
+    padding: 10px 12px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+}

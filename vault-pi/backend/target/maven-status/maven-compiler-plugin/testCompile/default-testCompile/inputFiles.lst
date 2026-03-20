@@ -1,0 +1,7 @@
+/Users/macmini/Desktop/11/vault-pi/backend/src/test/java/com/vaultpi/common/ResultAndErrorCodeTest.java
+/Users/macmini/Desktop/11/vault-pi/backend/src/test/java/com/vaultpi/controller/HealthControllerTest.java
+/Users/macmini/Desktop/11/vault-pi/backend/src/test/java/com/vaultpi/asset/service/WalletServiceTest.java
+/Users/macmini/Desktop/11/vault-pi/backend/src/test/java/com/vaultpi/user/dto/LoginRequestTest.java
+/Users/macmini/Desktop/11/vault-pi/backend/src/test/java/com/vaultpi/futures/dto/FuturesOrderAddRequestTest.java
+/Users/macmini/Desktop/11/vault-pi/backend/src/test/java/com/vaultpi/common/PasswordPolicyTest.java
+/Users/macmini/Desktop/11/vault-pi/backend/src/test/java/com/vaultpi/exchange/dto/OrderAddRequestTest.java

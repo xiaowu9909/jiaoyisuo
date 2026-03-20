@@ -1,0 +1,305 @@
+<script setup>
+import { message } from '../components/toast';
+
+import { ref, onMounted } from 'vue'
+import {
+  getAdminHelpPage,
+  postAdminHelpAdd,
+  postAdminHelpUpdate,
+  postAdminHelpDelete,
+  postAdminHelpTop,
+  postAdminHelpUntop,
+} from '../api/admin'
+
+const list = ref([])
+const total = ref(0)
+const loading = ref(false)
+const currentPage = ref(1)
+const pageSize = ref(10)
+
+const showModal = ref(false)
+const isEdit = ref(false)
+const form = ref({ 
+  id: null, 
+  title: '', 
+  classification: '新手入门', 
+  content: '', 
+  lang: 'CN', 
+  sort: 0, 
+  status: 'NORMAL',
+  isTop: '1'
+})
+const submitting = ref(false)
+
+async function load() {
+  loading.value = true
+  try {
+    const data = await getAdminHelpPage(currentPage.value, pageSize.value)
+    list.value = data.content || []
+    total.value = data.totalElements || 0
+  } catch (e) {
+    message.error(e.message)
+  } finally {
+    loading.value = false
+  }
+}
+
+function openAdd() {
+  isEdit.value = false
+  form.value = { 
+    id: null, 
+    title: '', 
+    classification: '新手入门', 
+    content: '', 
+    lang: 'CN', 
+    sort: 0, 
+    status: 'NORMAL',
+    isTop: '1'
+  }
+  showModal.value = true
+}
+
+function openEdit(item) {
+  isEdit.value = true
+  form.value = { 
+    id: item.id, 
+    title: item.title, 
+    classification: item.classification || 'OTHER', 
+    content: item.content || '', 
+    lang: item.lang || 'CN', 
+    sort: item.sort ?? 0, 
+    status: item.status || 'NORMAL',
+    isTop: item.isTop || '1'
+  }
+  showModal.value = true
+}
+
+async function submit() {
+  if (!form.value.title.trim()) return message.warning('请输入标题')
+  submitting.value = true
+  try {
+    const payload = { ...form.value }
+    if (isEdit.value) {
+      await postAdminHelpUpdate(payload)
+    } else {
+      await postAdminHelpAdd(payload)
+    }
+    showModal.value = false
+    await load()
+  } catch (e) {
+    message.error(e.message)
+  } finally {
+    submitting.value = false
+  }
+}
+
+async function toggleTop(item) {
+  try {
+    if (item.isTop === '0') {
+      await postAdminHelpUntop(item.id)
+    } else {
+      await postAdminHelpTop(item.id)
+    }
+    await load()
+  } catch (e) {
+    message.error(e.message)
+  }
+}
+
+async function toggleStatus(item) {
+  try {
+    const newStatus = item.status === 'NORMAL' ? 'DISABLED' : 'NORMAL'
+    await postAdminHelpUpdate({ id: item.id, status: newStatus })
+    await load()
+  } catch (e) {
+    message.error(e.message)
+  }
+}
+
+async function removeOne(id) {
+  if (!confirm('确定删除此帮助条目？')) return
+  try {
+    await postAdminHelpDelete(id)
+    await load()
+  } catch (e) {
+    message.error(e.message)
+  }
+}
+
+function formatTime(str) {
+  if (!str) return '—'
+  return new Date(str).toLocaleString('zh-CN')
+}
+
+onMounted(load)
+</script>
+
+<template>
+  <div class="admin-page">
+    <div class="page-header">
+      <h2 class="page-title">帮助中心内容管理</h2>
+      <button type="button" class="btn btn-primary btn-with-icon" @click="openAdd"><SvgIcon name="plus" :size="16" class="btn-icon" /> 新增条目</button>
+    </div>
+
+    <div class="admin-card">
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>排序/置顶</th>
+              <th>分类</th>
+              <th>标题</th>
+              <th>语言</th>
+              <th>发布时间</th>
+              <th>状态</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="loading"><td colspan="8" class="text-center py-8">正在同步内容...</td></tr>
+            <tr v-else-if="!list.length"><td colspan="8" class="text-center py-8">暂无帮助内容</td></tr>
+            <tr v-for="item in list" :key="item.id" :class="{ 'row-top': item.isTop === '0' }">
+              <td>{{ item.id }}</td>
+              <td>
+                <div class="sort-stack">
+                  <span class="sort-val">Sort: {{ item.sort }}</span>
+                  <span v-if="item.isTop === '0'" class="badge badge-warning">置顶</span>
+                </div>
+              </td>
+              <td><span class="class-tag">{{ item.classification }}</span></td>
+              <td class="col-title">{{ item.title }}</td>
+              <td><span class="lang-tag">{{ item.lang }}</span></td>
+              <td>{{ formatTime(item.createTime) }}</td>
+              <td>
+                <span :class="['badge', item.status === 'NORMAL' ? 'badge-success' : 'badge-danger']">
+                  {{ item.status === 'NORMAL' ? '启用' : '禁用' }}
+                </span>
+              </td>
+              <td class="action-cell">
+                <button class="btn-text" @click="openEdit(item)">编辑</button>
+                <button class="btn-text" @click="toggleTop(item)">{{ item.isTop === '0' ? '取消置顶' : '置顶' }}</button>
+                <button class="btn-text" @click="toggleStatus(item)">{{ item.status === 'NORMAL' ? '禁用' : '启用' }}</button>
+                <button class="btn-text danger" @click="removeOne(item.id)">删除</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination">
+        <button :disabled="currentPage <= 1" @click="currentPage--; load()">上一页</button>
+        <span class="page-info">第 {{ currentPage }} 页</span>
+        <button :disabled="currentPage >= Math.ceil(total / pageSize)" @click="currentPage++; load()">下一页</button>
+      </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div v-if="showModal" class="modal-overlay" @click="showModal = false">
+      <div class="modal-content" @click.stop>
+        <div class="modal-header">
+          <h3>{{ isEdit ? '编辑帮助正文' : '新增帮助条目' }}</h3>
+          <button type="button" class="close-btn" @click="showModal = false" aria-label="关闭"><SvgIcon name="close" :size="18" /></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group flex-2">
+              <label>文章标题</label>
+              <input v-model="form.title" placeholder="输入帮助标题" />
+            </div>
+            <div class="form-group">
+              <label>内部分类</label>
+              <input v-model="form.classification" placeholder="如：新手入门" />
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label>显示语言</label>
+              <select v-model="form.lang">
+                <option value="CN">简体中文</option>
+                <option value="EN">English</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>排序权重</label>
+              <input v-model.number="form.sort" type="number" />
+            </div>
+            <div class="form-group">
+              <label>状态</label>
+              <select v-model="form.status">
+                <option value="NORMAL">正常显示</option>
+                <option value="DISABLED">隐藏条目</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>正文内容 (Markdown/HTML格式)</label>
+            <textarea v-model="form.content" rows="12" placeholder="输入文章正文内容..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-ghost" @click="showModal = false">取消</button>
+          <button class="btn btn-primary" :disabled="submitting" @click="submit">
+            {{ submitting ? '保存中...' : '提交生效' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.admin-page { padding: 24px; }
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.page-title { font-size: 20px; font-weight: 700; color: #1a202c; }
+
+.admin-card { background: #fff; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 20px; }
+.table-container { width: 100%; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th { text-align: left; padding: 12px 16px; background: #f8fafc; color: #4a5568; font-weight: 600; border-bottom: 1px solid #edf2f7; }
+td { padding: 14px 16px; border-bottom: 1px solid #edf2f7; }
+
+.row-top { background: #fffef2; }
+.sort-stack { display: flex; flex-direction: column; gap: 4px; }
+.sort-val { font-size: 11px; color: #718096; }
+.class-tag { background: #f7fafc; border: 1px solid #e2e8f0; color: #4a5568; padding: 2px 8px; border-radius: 4px; font-size: 12px; }
+
+.col-title { font-weight: 500; color: #2d3748; max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lang-tag { background: #f0fff4; color: #38a169; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+
+.badge { padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+.badge-warning { background: #fffaf0; color: #dd6b20; width: fit-content; }
+.badge-success { background: #f0fff4; color: #38a169; }
+.badge-danger { background: #fff5f5; color: #e53e3e; }
+
+.action-cell { white-space: nowrap; }
+.btn-text { background: none; border: none; color: #3182ce; cursor: pointer; padding: 0 8px; font-size: 13px; font-weight: 500; }
+.btn-text:hover { color: #2c5282; text-decoration: underline; }
+.btn-text.danger { color: #e53e3e; }
+
+/* Modal */
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.modal-content { background: #fff; border-radius: 12px; width: 850px; max-width: 95%; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+.modal-header { padding: 16px 24px; border-bottom: 1px solid #edf2f7; display: flex; justify-content: space-between; align-items: center; }
+.modal-header h3 { margin: 0; font-size: 18px; }
+
+.modal-body { padding: 24px; overflow-y: auto; flex: 1; }
+.form-group { margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
+.form-group.flex-2 { flex: 2; }
+.form-group label { font-weight: 600; font-size: 14px; color: #4a5568; }
+.form-group input, .form-group select, .form-group textarea { padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 14px; outline: none; }
+.form-group input:focus, .form-group textarea:focus { border-color: var(--primary-color); }
+.form-row { display: flex; gap: 20px; }
+
+.modal-footer { padding: 16px 24px; border-top: 1px solid #edf2f7; display: flex; justify-content: flex-end; gap: 12px; }
+
+.btn { padding: 10px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; }
+.btn-primary { background: #2d8cf0; color: #fff; }
+.btn-ghost { background: #f7fafc; color: #4a5568; border-color: #e2e8f0; }
+
+.pagination { display: flex; justify-content: flex-end; align-items: center; gap: 16px; margin-top: 20px; }
+.pagination button { padding: 6px 16px; border: 1px solid #e2e8f0; border-radius: 6px; background: #fff; }
+.pagination button:disabled { opacity: 0.5; cursor: not-allowed; }
+</style>
