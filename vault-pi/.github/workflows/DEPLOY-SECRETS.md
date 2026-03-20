@@ -5,7 +5,7 @@
 - `DEPLOY_HOST`：`107.175.124.214`
 - `DEPLOY_PORT`：`22`
 - `DEPLOY_USER`：`root`
-- `DEPLOY_PASSWORD`：88r0ggf5YL0TKmRbL7
+- `DEPLOY_PASSWORD`：`<你的服务器SSH密码>`（不要写进代码仓库）
 - `DEPLOY_APP_DIR`：`/www/wwwroot/vault314.com`
 
 配置完成后：

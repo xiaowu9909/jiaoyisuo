@@ -129,6 +129,21 @@ jobs:
               --spring.task.scheduling.pool.size=20 \
               > backend.log 2>&1 &
 
-            sleep 8
+            # Wait up to 90s for backend health.
+            OK=0
+            for i in {1..30}; do
+              if curl -fsS http://127.0.0.1:8081/actuator/health >/dev/null 2>&1; then
+                OK=1
+                break
+              fi
+              sleep 3
+            done
+
+            if [ "$OK" != "1" ]; then
+              echo "Backend health check failed after 90s, printing backend.log tail:"
+              tail -n 200 backend.log || true
+              exit 1
+            fi
+
             curl -fsS http://127.0.0.1:8081/actuator/health
             echo "Deploy success at ${TS}"
