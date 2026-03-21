@@ -48,6 +48,26 @@ public class ExchangeOrder {
     @Column(name = "create_time", nullable = false)
     private Instant createTime;
 
+    /** 是否AI生成订单：0=否, 1=是 */
+    @Column(name = "is_ai", nullable = false)
+    private Integer isAi = 0;
+
+    /** 是否错过单（余额不足）：0=否, 1=是 */
+    @Column(name = "is_missed", nullable = false)
+    private Integer isMissed = 0;
+
+    /** 错过单时记录所需最低余额 */
+    @Column(name = "required_balance", precision = 18, scale = 8)
+    private BigDecimal requiredBalance;
+
+    /** AI执行理由话术 */
+    @Column(name = "ai_note", length = 255)
+    private String aiNote;
+
+    /** 盈亏金额（AI单使用） */
+    @Column(precision = 18, scale = 8)
+    private BigDecimal profit;
+
     @PrePersist
     public void prePersist() {
         if (createTime == null) createTime = Instant.now();

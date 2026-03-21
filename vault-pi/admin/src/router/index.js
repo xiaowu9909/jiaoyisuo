@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Layout from '../views/Layout.vue'
+import { storeAdminCsrfToken, refreshAdminCsrfFromServer } from '../api/admin'
 
 const API_BASE = import.meta.env.VITE_API_BASE || '/api'
 
@@ -32,13 +33,16 @@ const routes = [
       { path: 'activity', name: 'Activity', component: () => import('../views/ActivityManage.vue'), meta: { title: '活动管理' } },
       { path: 'envelope', name: 'Envelope', component: () => import('../views/EnvelopeManage.vue'), meta: { title: '红包管理' } },
       { path: 'system', name: 'System', component: () => import('../views/System.vue'), meta: { title: '系统配置' } },
+      { path: 'system/logo-settings', name: 'LogoSettings', component: () => import('../views/LogoSettings.vue'), meta: { title: 'LOGO设置' } },
       { path: 'system/getting-start', name: 'GettingStart', component: () => import('../views/GettingStart.vue'), meta: { title: '新手入门配置' } },
       { path: 'system/about-brand', name: 'AboutBrand', component: () => import('../views/AboutBrand.vue'), meta: { title: '关于我们配置' } },
       { path: 'system/download-app', name: 'AppDownload', component: () => import('../views/AppDownload.vue'), meta: { title: '下载APP配置' } },
       { path: 'system/admins', name: 'Admins', component: () => import('../views/Admins.vue'), meta: { title: '管理员管理' } },
       { path: 'system/operation-log', name: 'OperationLog', component: () => import('../views/OperationLog.vue'), meta: { title: '操作日志' } },
       { path: 'system/error-log', name: 'ErrorLog', component: () => import('../views/ErrorLog.vue'), meta: { title: '错误日志' } },
-      { path: 'bond', name: 'Bond', component: () => import('../views/Placeholder.vue'), meta: { title: '保证金管理' } },
+      { path: 'ai/phrases', name: 'AIPhraseManager', component: () => import('../views/AIPhraseManager.vue'), meta: { title: 'AI话术管理' } },
+      { path: 'ai/users', name: 'AIUserMonitor', component: () => import('../views/AIUserMonitor.vue'), meta: { title: 'AI用户监控' } },
+      { path: 'ai/plans', name: 'AIPlanManager', component: () => import('../views/AIPlanManager.vue'), meta: { title: 'AI套餐定价' } },
     ],
   },
 ]
@@ -63,6 +67,11 @@ router.beforeEach(async (to) => {
     }
     if (json.data.role !== 'ADMIN') {
       return { path: '/login', query: { redirect: to.fullPath } }
+    }
+    if (json.data?.csrfToken) {
+      storeAdminCsrfToken(json.data.csrfToken)
+    } else {
+      await refreshAdminCsrfFromServer()
     }
   } catch (_) {
     return { path: '/login', query: { redirect: to.fullPath } }

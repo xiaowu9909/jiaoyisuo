@@ -31,6 +31,9 @@ const routes = [
       { path: 'withdraw/address', name: 'UcWithdrawAddress', component: () => import('../views/uc/UcWithdrawAddress.vue'), meta: { title: '提现地址' } },
       { path: 'entrust/current', name: 'UcEntrustCurrent', component: () => import('../views/uc/UcEntrustCurrent.vue'), meta: { title: '当前委托' } },
       { path: 'entrust/history', name: 'UcEntrustHistory', component: () => import('../views/uc/UcEntrustHistory.vue'), meta: { title: '历史委托' } },
+      { path: 'ai/stream', name: 'AIStatusStream', component: () => import('../views/uc/AIStatusStream.vue'), meta: { title: 'AI量化引擎' } },
+      { path: 'ai/orders', name: 'AIOrderList', component: () => import('../views/uc/AIOrderList.vue'), meta: { title: 'AI订单记录' } },
+      { path: 'ai/subscribe', name: 'AISubscribe', component: () => import('../views/uc/AISubscribe.vue'), meta: { title: 'AI订阅中心' } },
     ],
   },
   {

@@ -33,4 +33,7 @@ public interface ExchangeOrderRepository extends JpaRepository<ExchangeOrder, St
     /** 撮合用：买单按价格降序（先吃高价买单） */
     List<ExchangeOrder> findBySymbolAndDirectionAndStatusOrderByPriceDescCreateTimeAsc(
         String symbol, String direction, String status, Pageable pageable);
+
+    /** AI单查询：按会员ID和isAi标志查询，按创建时间倒序 */
+    List<ExchangeOrder> findByMemberIdAndIsAiOrderByCreateTimeDesc(Long memberId, Integer isAi);
 }

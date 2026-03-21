@@ -32,6 +32,23 @@ export function setCsrfToken(token: string | null): void {
   _csrfToken = token != null ? token : ''
 }
 
+/** 与后端 {@code CsrfCookieSupport#COOKIE_NAME} 一致；刷新页后内存 token 清空时从 Cookie 恢复，避免 POST 403 */
+function hydrateCsrfFromCookie(): void {
+  if (typeof document === 'undefined') return
+  const name = 'VAULTPI_XSRF'
+  const parts = document.cookie.split(';')
+  for (const part of parts) {
+    const idx = part.indexOf('=')
+    if (idx < 0) continue
+    const k = part.slice(0, idx).trim()
+    if (k !== name) continue
+    const v = decodeURIComponent(part.slice(idx + 1).trim())
+    if (v) setCsrfToken(v)
+    return
+  }
+}
+hydrateCsrfFromCookie()
+
 export interface ApiResponse<T = unknown> {
   code: number
   message?: string
@@ -48,15 +65,25 @@ interface RequestOptions extends RequestInit {
 export async function request(url: string, options: RequestOptions = {}): Promise<ApiResponse> {
   // 高频行情拉取会导致全局 loading/刷新图标闪烁
   // `symbol-thumb-one` 由 Exchange.vue 做降级轮询时非常频繁，因此跳过 loading 状态
+  // 交易页定时轮询：钱包 / 合约持仓与订单 —— 不应触发全屏遮罩（用户会感觉「页面一直在刷新」）
   const skipGlobalLoading = (
     url.includes('/market/symbol-thumb-one')
     || url.includes('/market/plate')
     || url.includes('/market/latest-trade')
+    || url.includes('/market/symbol-thumb')
+    || url.includes('/uc/wallet/list')
+    || url.includes('/futures/position/current')
+    || url.includes('/futures/order/current')
+    || url.includes('/futures/order/history')
+    || url.includes('/uc/order/current')
+    || url.includes('/uc/order/history')
+    || url.includes('/uc/order/trade-history')
   )
   skipGlobalLoading ? null : _loadingStore?.addLoading?.()
   try {
     const method = (options.method || 'GET').toUpperCase()
-    const headers: Record<string, string> = { 'Content-Type': 'application/json', ...options.headers }
+    const { headers: optHeaders, signal: optSignal, ...restFetch } = options
+    const headers: Record<string, string> = { 'Content-Type': 'application/json', ...(optHeaders || {}) }
     if (method !== 'GET' && method !== 'HEAD') {
       const csrf = getCsrfToken()
       if (csrf) headers['X-CSRF-TOKEN'] = csrf
@@ -65,9 +92,9 @@ export async function request(url: string, options: RequestOptions = {}): Promis
     try {
       res = await fetch(url, {
         credentials: 'include',
+        ...restFetch,
+        signal: optSignal,
         headers,
-        signal: options.signal,
-        ...options,
       })
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : ''
@@ -529,5 +556,34 @@ export async function postUcWithdraw(body: Record<string, unknown>): Promise<any
 export async function getUcWithdrawRecord(pageNo = 1, pageSize = 20): Promise<any> {
   const json = await request(`${API_BASE}/uc/withdraw/record?pageNo=${pageNo}&pageSize=${pageSize}`)
   if (json.code !== 0) throw new Error(json.message || 'request failed')
+  return json.data
+}
+
+// ── AI 量化引擎 ─────────────────────────────────────────────
+
+export async function getAiPhrasesByType(type: number): Promise<any> {
+  const json = await request(`${API_BASE}/ai/phrases?type=${type}`)
+  if (json.code !== 0) throw new Error(json.message || 'request failed')
+  return json.data
+}
+
+export async function getAiOrders(): Promise<any> {
+  const json = await request(`${API_BASE}/ai/orders`)
+  if (json.code !== 0) throw new Error(json.message || 'request failed')
+  return json.data
+}
+
+export async function getAiPlans(): Promise<any> {
+  const json = await request(`${API_BASE}/ai/plans`)
+  if (json.code !== 0) throw new Error(json.message || 'request failed')
+  return json.data
+}
+
+export async function postAiSubscribePurchase(planId: number): Promise<any> {
+  const json = await request(`${API_BASE}/ai/subscribe/purchase`, {
+    method: 'POST',
+    body: JSON.stringify({ planId }),
+  })
+  if (json.code !== 0) throw new Error(json.message || '订阅失败')
   return json.data
 }

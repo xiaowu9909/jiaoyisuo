@@ -591,3 +591,36 @@ export async function postAdminUploadImage(file) {
   }
   throw new Error('上传失败：CSRF 重试后仍无效')
 }
+
+// ── AI控盘 ──────────────────────────────────────────────────
+
+export async function getAdminAiPhrases() {
+  return request('/admin/ai/phrases')
+}
+export async function postAdminAiPhraseAdd(data) {
+  return request('/admin/ai/phrases/add', { method: 'POST', body: JSON.stringify(data) })
+}
+export async function postAdminAiPhraseUpdate(data) {
+  return request('/admin/ai/phrases/update', { method: 'POST', body: JSON.stringify(data) })
+}
+export async function postAdminAiPhraseDelete(id) {
+  return request('/admin/ai/phrases/delete', { method: 'POST', body: JSON.stringify({ id }) })
+}
+export async function getAdminAiUsers() {
+  return request('/admin/ai/users')
+}
+export async function postAdminAiUserCancel(userId) {
+  return request('/admin/ai/users/cancel', { method: 'POST', body: JSON.stringify({ userId }) })
+}
+export async function getAdminAiPlans() {
+  return request('/admin/ai/plans')
+}
+export async function postAdminAiPlanAdd(data) {
+  return request('/admin/ai/plans/add', { method: 'POST', body: JSON.stringify(data) })
+}
+export async function postAdminAiPlanUpdate(data) {
+  return request('/admin/ai/plans/update', { method: 'POST', body: JSON.stringify(data) })
+}
+export async function postAdminAiPlanDelete(id) {
+  return request('/admin/ai/plans/delete', { method: 'POST', body: JSON.stringify({ id }) })
+}

@@ -100,6 +100,14 @@ public class Member {
     @Column(name = "total_recharge", precision = 24, scale = 8)
     private BigDecimal totalRecharge = BigDecimal.ZERO;
 
+    /** AI量化订阅状态：0=未开启, 1=已开启 */
+    @Column(name = "ai_status", nullable = false)
+    private Integer aiStatus = 0;
+
+    /** AI订阅到期时间 */
+    @Column(name = "ai_expire_time")
+    private Instant aiExpireTime;
+
     @PrePersist
     public void prePersist() {
         if (registrationTime == null) {
