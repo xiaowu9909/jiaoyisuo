@@ -1,17 +1,26 @@
 <script setup>
 import { message } from '../components/toast';
 
-import { ref, onMounted } from 'vue'
-import { 
-  getAdminAdvertiseAll, 
-  postAdminAdvertiseAdd, 
-  postAdminAdvertiseUpdate, 
-  postAdminAdvertiseDelete 
+import { ref, computed, onMounted } from 'vue'
+import {
+  getAdminAdvertiseAll,
+  postAdminAdvertiseAdd,
+  postAdminAdvertiseUpdate,
+  postAdminAdvertiseDelete
 } from '../api/admin'
 
-const list = ref([])
+const allList = ref([])
 const loading = ref(false)
 const errorMsg = ref('')
+
+// 分页
+const currentPage = ref(1)
+const pageSize = 10
+const total = computed(() => allList.value.length)
+const totalPages = computed(() => Math.ceil(total.value / pageSize) || 1)
+const list = computed(() =>
+  allList.value.slice((currentPage.value - 1) * pageSize, currentPage.value * pageSize)
+)
 
 // Modal
 const modalVisible = ref(false)
@@ -32,7 +41,8 @@ async function load() {
   loading.value = true
   errorMsg.value = ''
   try {
-    list.value = await getAdminAdvertiseAll()
+    allList.value = await getAdminAdvertiseAll()
+    currentPage.value = 1
   } catch (e) {
     errorMsg.value = e.message
   } finally {
@@ -137,9 +147,9 @@ onMounted(load)
                 <td>
                   <div class="ad-preview" :style="{ backgroundImage: `url(${ad.url})` }"></div>
                 </td>
-                <td><b style="color: #111827">{{ ad.name }}</b></td>
+                <td><b style="color: var(--text-main)">{{ ad.name }}</b></td>
                 <td><span class="lang-tag">{{ ad.lang }}</span></td>
-                <td><small style="color: #94a3b8">{{ ad.linkUrl || '—' }}</small></td>
+                <td><small style="color: var(--text-muted)">{{ ad.linkUrl || '—' }}</small></td>
                 <td>
                   <span :class="['status-tag', ad.status === 0 ? 'ok' : 'err']" @click="toggleStatus(ad)" style="cursor: pointer">
                     {{ ad.status === 0 ? '正在展现' : '已下线' }}
@@ -152,6 +162,13 @@ onMounted(load)
               </tr>
             </tbody>
           </table>
+        </div>
+
+        <!-- 分页 -->
+        <div v-if="total > pageSize" class="pagination">
+          <button :disabled="currentPage <= 1" @click="currentPage--">上一页</button>
+          <span class="page-info">第 {{ currentPage }} / {{ totalPages }} 页（共 {{ total }} 条）</span>
+          <button :disabled="currentPage >= totalPages" @click="currentPage++">下一页</button>
         </div>
       </div>
     </div>
@@ -203,47 +220,51 @@ onMounted(load)
 </template>
 
 <style scoped>
-.advertise-page { color: #333; }
-.admin-card { border: 1px solid #eef0f2; border-radius: 8px; overflow: hidden; background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
-.card-head { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: #f8f9fa; border-bottom: 1px solid #eef0f2; }
-.card-title { font-size: 15px; font-weight: 600; color: #1a202c; }
+.advertise-page { color: var(--text-main); }
+.admin-card { border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; background: var(--ui-surface-2); box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+.card-head { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: var(--table-th-bg); border-bottom: 1px solid var(--border-color); }
+.card-title { font-size: 15px; font-weight: 600; color: var(--text-main); }
 .card-body { padding: 20px; }
 
 .function-wrapper { margin-bottom: 20px; text-align: right; }
 .btn { padding: 8px 18px; border-radius: 6px; font-size: 14px; cursor: pointer; border: none; font-weight: 500; transition: all 0.2s; }
-.btn-primary { background: #2d8cf0; color: #fff; }
-.btn-info { background: #f7fafc; color: #4a5568; border: 1px solid #e2e8f0; }
+.btn-primary { background: var(--color-accent-blue); color: var(--text-on-primary); }
+.btn-info { background: var(--table-th-bg); color: var(--text-secondary); border: 1px solid var(--border-color); }
 
-.table-wrap { border: 1px solid #edf2f7; border-radius: 6px; overflow: hidden; }
+.table-wrap { border: 1px solid var(--border-color); border-radius: 6px; overflow: hidden; }
 .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-.data-table th { text-align: left; padding: 14px 16px; background: #f7fafc; color: #4a5568; font-weight: 600; }
-.data-table td { padding: 14px 16px; border-top: 1px solid #edf2f7; vertical-align: middle; }
+.data-table th { text-align: left; padding: 14px 16px; background: var(--table-th-bg); color: var(--text-secondary); font-weight: 600; }
+.data-table td { padding: 14px 16px; border-top: 1px solid var(--border-color); vertical-align: middle; }
 
-.ad-preview { width: 100px; height: 40px; border-radius: 4px; background-size: cover; background-position: center; border: 1px solid #edf2f7; background-color: #f8fafc; }
-.lang-tag { padding: 2px 6px; background: #edf2f7; color: #4a5568; border-radius: 4px; font-size: 11px; font-weight: 700; }
+.ad-preview { width: 100px; height: 40px; border-radius: 4px; background-size: cover; background-position: center; border: 1px solid var(--border-color); background-color: var(--table-th-bg); }
+.lang-tag { padding: 2px 6px; background: var(--border-color); color: var(--text-secondary); border-radius: 4px; font-size: 11px; font-weight: 700; }
 
 .status-tag { padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
-.status-tag.ok { background: #c6f6d5; color: #22543d; }
-.status-tag.err { background: #fed7d7; color: #822727; }
+.status-tag.ok { background: var(--color-success-bg); color: var(--color-success); }
+.status-tag.err { background: #fed7d7; color: var(--color-danger-strong); }
 
 .btn-sm { padding: 5px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; border: none; font-weight: 500; margin-left: 6px; }
-.btn-danger-lite { background: rgba(229, 62, 62, 0.1); color: #e53e3e; }
+.btn-danger-lite { background: rgba(229, 62, 62, 0.1); color: var(--color-danger-alt); }
 
 /* Modal */
-.modal-mask { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; z-index: 2000; }
-.modal-wrap { width: 480px; background: #fff; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-.modal-header { padding: 16px 20px; border-bottom: 1px solid #edf2f7; display: flex; justify-content: space-between; align-items: center; }
+.modal-mask { position: fixed; inset: 0; background: var(--overlay-scrim); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; z-index: 2000; }
+.modal-wrap { width: 480px; background: var(--ui-surface-2); border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+.modal-header { padding: 16px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
 .modal-title { font-size: 15px; font-weight: 600; }
 .modal-body { padding: 20px; }
 .modal-form-item { margin-bottom: 16px; }
 .modal-form-item-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-.modal-form-item label { display: block; margin-bottom: 6px; color: #4a5568; font-size: 13px; font-weight: 500; }
-.input { width: 100%; padding: 9px 12px; border: 1px solid #e2e8f0; border-radius: 6px; outline: none; box-sizing: border-box; }
-.input:focus { border-color: #2d8cf0; }
-.modal-footer { padding: 16px 20px; background: #f8fafc; text-align: right; border-top: 1px solid #edf2f7; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; }
-.btn-cancel { padding: 8px 20px; border: 1px solid #e2e8f0; border-radius: 6px; background: #fff; margin-right: 10px; cursor: pointer; }
+.modal-form-item label { display: block; margin-bottom: 6px; color: var(--text-secondary); font-size: 13px; font-weight: 500; }
+.input { width: 100%; padding: 9px 12px; border: 1px solid var(--border-color); border-radius: 6px; outline: none; box-sizing: border-box; }
+.input:focus { border-color: var(--color-accent-blue); }
+.modal-footer { padding: 16px 20px; background: var(--table-th-bg); text-align: right; border-top: 1px solid var(--border-color); border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; }
+.btn-cancel { padding: 8px 20px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--ui-surface-2); margin-right: 10px; cursor: pointer; }
 
-.loading-cell, .no-data-cell { text-align: center; color: #a0aec0; padding: 40px; }
-.error { color: #e53e3e; font-size: 13px; margin-bottom: 15px; }
-.error-tip { color: #e53e3e; font-size: 12px; margin-top: 10px; }
+.loading-cell, .no-data-cell { text-align: center; color: var(--text-muted); padding: 40px; }
+.error { color: var(--color-danger-alt); font-size: 13px; margin-bottom: 15px; }
+.error-tip { color: var(--color-danger-alt); font-size: 12px; margin-top: 10px; }
+.pagination { display: flex; justify-content: flex-end; align-items: center; gap: 16px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border-color); }
+.pagination button { padding: 6px 16px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--ui-surface-2); cursor: pointer; }
+.pagination button:disabled { opacity: 0.5; cursor: not-allowed; }
+.page-info { font-size: 13px; color: var(--text-muted); }
 </style>

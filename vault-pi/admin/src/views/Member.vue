@@ -1,7 +1,7 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { getAdminMemberPage, getAdminMe, postAdminMemberAdd, postAdminMemberBonus } from '../api/admin'
+import { getAdminMemberPage, getAdminMe, postAdminMemberAdd, postAdminMemberBonus, postAdminMemberStatusUpdate } from '../api/admin'
 
 const router = useRouter()
 const adminMe = ref(null)
@@ -13,6 +13,29 @@ const searchKey = ref('')
 const statusFilter = ref('')
 const currentPage = ref(1)
 const pageSize = 20
+
+// 批量选择
+const selectedIds = ref(new Set())
+const allChecked = computed(() =>
+  list.value.length > 0 && list.value.every((m) => selectedIds.value.has(m.id))
+)
+const someChecked = computed(() => selectedIds.value.size > 0)
+
+function toggleAll(e) {
+  if (e.target.checked) {
+    list.value.forEach((m) => selectedIds.value.add(m.id))
+  } else {
+    selectedIds.value.clear()
+  }
+}
+
+function toggleRow(id) {
+  if (selectedIds.value.has(id)) {
+    selectedIds.value.delete(id)
+  } else {
+    selectedIds.value.add(id)
+  }
+}
 
 // 添加用户弹窗
 const addModalVisible = ref(false)
@@ -29,6 +52,7 @@ const bonusForm = ref({ memberId: null, memberDisplay: '', amount: '', remark: '
 async function load() {
   loading.value = true
   errorMsg.value = ''
+  selectedIds.value.clear()
   try {
     const data = await getAdminMemberPage(currentPage.value, pageSize, searchKey.value, statusFilter.value)
     list.value = data.content || []
@@ -63,8 +87,89 @@ function goDetail(m) {
   router.push('/member/detail/' + m.id)
 }
 
-function exportExcel() {
-  errorMsg.value = '导出功能需后端支持'
+// ── 拉黑 / 解黑 ──────────────────────────────────────────
+async function toggleBlacklist(m) {
+  const isBlacklisted = m.status === 'ILLEGAL'
+  const confirmMsg = isBlacklisted
+    ? `确认解除对 "${m.username}" 的黑名单？`
+    : `确认将 "${m.username}" 加入黑名单？加黑后该用户将无法操作账户。`
+  if (!confirm(confirmMsg)) return
+  try {
+    const newStatus = isBlacklisted ? 'NORMAL' : 'ILLEGAL'
+    await postAdminMemberStatusUpdate({ id: m.id, status: newStatus })
+    await load()
+  } catch (e) {
+    errorMsg.value = e.message || '操作失败'
+  }
+}
+
+// ── 批量禁用 ──────────────────────────────────────────────
+async function batchBlacklist() {
+  if (selectedIds.value.size === 0) return
+  if (!confirm(`确认将选中的 ${selectedIds.value.size} 位用户加入黑名单？`)) return
+  try {
+    await Promise.all(
+      [...selectedIds.value].map((id) =>
+        postAdminMemberStatusUpdate({ id, status: 'ILLEGAL' })
+      )
+    )
+    await load()
+  } catch (e) {
+    errorMsg.value = e.message || '批量操作失败'
+  }
+}
+
+// ── 批量恢复正常 ────────────────────────────────────────────
+async function batchRestore() {
+  if (selectedIds.value.size === 0) return
+  if (!confirm(`确认将选中的 ${selectedIds.value.size} 位用户恢复为正常状态？`)) return
+  try {
+    await Promise.all(
+      [...selectedIds.value].map((id) =>
+        postAdminMemberStatusUpdate({ id, status: 'NORMAL' })
+      )
+    )
+    await load()
+  } catch (e) {
+    errorMsg.value = e.message || '批量操作失败'
+  }
+}
+
+// ── CSV 导出 ──────────────────────────────────────────────
+function exportCsv() {
+  if (!list.value.length) {
+    errorMsg.value = '当前页无数据可导出'
+    return
+  }
+  const headers = ['UID', '用户名', '邮箱', '邀请码', '真实姓名', '手机', 'VIP等级', '累计充值(USDT)', '状态', '推荐人', '注册时间']
+  const rows = list.value.map((m) => [
+    m.uid ?? '',
+    m.username ?? '',
+    m.email ?? '',
+    m.inviteCode ?? '',
+    m.realName ?? '',
+    m.phone ?? '',
+    m.vipLevel ?? 0,
+    m.totalRecharge ?? 0,
+    m.status === 'NORMAL' ? '正常' : '异常',
+    m.parentUsername ? `${m.parentUsername}${m.parentUid != null ? `(${m.parentUid})` : ''}` : '',
+    formatTime(m.registrationTime),
+  ])
+  const csvContent = [headers, ...rows]
+    .map((row) =>
+      row.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(',')
+    )
+    .join('\n')
+  const bom = '\uFEFF'
+  const blob = new Blob([bom + csvContent], { type: 'text/csv;charset=utf-8;' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `members_page${currentPage.value}_${Date.now()}.csv`
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
 }
 
 function openAddModal() {
@@ -188,7 +293,16 @@ onMounted(async () => {
             </button>
           </div>
           <div class="btns-wrapper">
-            <button type="button" class="btn btn-success btn-with-icon" @click="exportExcel">
+            <template v-if="someChecked">
+              <span class="selected-hint">已选 {{ selectedIds.size }} 人</span>
+              <button type="button" class="btn btn-small btn-danger-lite btn-with-icon" @click="batchBlacklist">
+                <SvgIcon name="ban" :size="14" class="btn-icon" /> 批量拉黑
+              </button>
+              <button type="button" class="btn btn-small btn-success btn-with-icon" @click="batchRestore">
+                <SvgIcon name="check" :size="14" class="btn-icon" /> 批量恢复
+              </button>
+            </template>
+            <button type="button" class="btn btn-success btn-with-icon" @click="exportCsv">
               <SvgIcon name="download" :size="16" class="btn-icon" /> 导出报表
             </button>
           </div>
@@ -198,7 +312,9 @@ onMounted(async () => {
           <table class="data-table">
             <thead>
               <tr>
-                <th style="width: 40px"><input type="checkbox" /></th>
+                <th style="width: 40px">
+                  <input type="checkbox" :checked="allChecked" :indeterminate="someChecked && !allChecked" @change="toggleAll" />
+                </th>
                 <th>UID</th>
                 <th>会员信息</th>
                 <th>邀请码</th>
@@ -218,32 +334,32 @@ onMounted(async () => {
               <tr v-else-if="!list.length">
                 <td colspan="11" class="no-data-cell">未找到匹配的会员数据</td>
               </tr>
-              <tr v-for="m in list" :key="m.id">
-                <td><input type="checkbox" /></td>
-                <td><span style="font-family: monospace; color: #6b7280">{{ m.uid != null ? m.uid : '—' }}</span></td>
+              <tr v-for="m in list" :key="m.id" :class="{ 'row-selected': selectedIds.has(m.id), 'row-illegal': m.status === 'ILLEGAL' }">
+                <td><input type="checkbox" :checked="selectedIds.has(m.id)" @change="toggleRow(m.id)" /></td>
+                <td><span style="font-family: monospace; color: var(--text-muted)">{{ m.uid != null ? m.uid : '—' }}</span></td>
                 <td>
-                  <div style="font-weight: 600; color: #111827">{{ m.username }}</div>
-                  <div style="font-size: 11px; color: #9ca3af">{{ m.email || '无邮箱' }}</div>
+                  <div style="font-weight: 600; color: var(--text-main)">{{ m.username }}</div>
+                  <div style="font-size: 11px; color: var(--text-muted)">{{ m.email || '无邮箱' }}</div>
                 </td>
-                <td><span style="font-family: monospace; font-size: 12px; color: #4b5563">{{ m.inviteCode || '—' }}</span></td>
+                <td><span style="font-family: monospace; font-size: 12px; color: var(--text-secondary)">{{ m.inviteCode || '—' }}</span></td>
                 <td>
                   <div>{{ m.realName || '未实名' }}</div>
-                  <div style="font-size: 11px; color: #9ca3af">{{ m.phone || '—' }}</div>
+                  <div style="font-size: 11px; color: var(--text-muted)">{{ m.phone || '—' }}</div>
                 </td>
                 <td>
                   <span class="vip-tag">VIP{{ m.vipLevel != null ? m.vipLevel : 0 }}</span>
                 </td>
-                <td style="font-size: 12px; color: #374151">{{ m.totalRecharge != null ? Number(m.totalRecharge) : 0 }}</td>
-                <td style="font-size: 12px; color: #6b7280">{{ formatTime(m.registrationTime) }}</td>
+                <td style="font-size: 12px; color: var(--text-secondary)">{{ m.totalRecharge != null ? Number(m.totalRecharge) : 0 }}</td>
+                <td style="font-size: 12px; color: var(--text-muted)">{{ formatTime(m.registrationTime) }}</td>
                 <td>
                   <span class="status-tag" :class="m.status === 'NORMAL' ? 'normal' : 'illegal'">
-                    {{ m.status === 'NORMAL' ? '正常' : '异常' }}
+                    {{ m.status === 'NORMAL' ? '正常' : '已拉黑' }}
                   </span>
                 </td>
                 <td>
                   <template v-if="m.parentId != null">
-                    <span v-if="m.parentUsername" style="color: #374151">{{ m.parentUsername }}</span>
-                    <span v-if="m.parentUid != null" style="font-size: 11px; color: #6b7280; margin-left: 4px">({{ m.parentUid }})</span>
+                    <span v-if="m.parentUsername" style="color: var(--text-secondary)">{{ m.parentUsername }}</span>
+                    <span v-if="m.parentUid != null" style="font-size: 11px; color: var(--text-muted); margin-left: 4px">({{ m.parentUid }})</span>
                     <span v-if="!m.parentUsername && m.parentUid == null">#{{ m.parentId }}</span>
                   </template>
                   <span v-else>—</span>
@@ -251,7 +367,14 @@ onMounted(async () => {
                 <td class="action-cell" style="justify-content: flex-end">
                   <button type="button" class="btn-link primary" @click="goDetail(m)">详情</button>
                   <button v-if="canOperate" type="button" class="btn-link bonus" @click="openBonusModal(m)">送彩金</button>
-                  <button v-if="canOperate" type="button" class="btn-link">拉黑</button>
+                  <button
+                    v-if="canOperate"
+                    type="button"
+                    :class="['btn-link', m.status === 'ILLEGAL' ? 'unban' : 'ban']"
+                    @click="toggleBlacklist(m)"
+                  >
+                    {{ m.status === 'ILLEGAL' ? '解黑' : '拉黑' }}
+                  </button>
                 </td>
               </tr>
             </tbody>
@@ -339,44 +462,55 @@ onMounted(async () => {
 
 <style scoped>
 .modal-mask { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 1000; }
-.modal-wrap { background: #fff; border-radius: 8px; min-width: 360px; max-width: 420px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
-.modal-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-bottom: 1px solid #eee; }
+.modal-wrap { background: var(--ui-surface-2); border-radius: 8px; min-width: 360px; max-width: 420px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+.modal-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--admin-divider-soft); }
 .modal-title { font-size: 15px; font-weight: 600; }
 .modal-body { padding: 18px; }
 .modal-form-item { margin-bottom: 14px; }
-.modal-form-item label { display: block; font-size: 13px; color: #374151; margin-bottom: 4px; }
-.modal-form-item .input { width: 100%; padding: 8px 12px; font-size: 14px; border: 1px solid #d1d5db; border-radius: 6px; box-sizing: border-box; }
-.modal-footer { display: flex; justify-content: flex-end; gap: 10px; padding: 12px 18px; border-top: 1px solid #eee; }
-.btn-cancel { padding: 8px 16px; border: 1px solid #d1d5db; background: #fff; border-radius: 6px; cursor: pointer; }
-.btn-primary { padding: 8px 16px; background: #3b82f6; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
+.modal-form-item label { display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; }
+.modal-form-item .input { width: 100%; padding: 8px 12px; font-size: 14px; border: 1px solid var(--control-border); border-radius: 6px; box-sizing: border-box; }
+.modal-footer { display: flex; justify-content: flex-end; gap: 10px; padding: 12px 18px; border-top: 1px solid var(--admin-divider-soft); }
+.btn-cancel { padding: 8px 16px; border: 1px solid var(--control-border); background: var(--ui-surface-2); border-radius: 6px; cursor: pointer; }
+.btn-primary { padding: 8px 16px; background: var(--color-accent-blue); color: var(--text-on-primary); border: none; border-radius: 6px; cursor: pointer; }
 .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
-.error-tip { color: #dc2626; font-size: 13px; margin-top: 8px; }
+.error-tip { color: var(--color-danger-strong); font-size: 13px; margin-top: 8px; }
 .user-type-tag { display: inline-flex; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: 500; }
 .user-type-tag.normal { background: #eff6ff; color: #2563eb; }
-.user-type-tag.internal { background: #f3f4f6; color: #6b7280; }
-.btn-link.bonus { color: #059669; }
-.btn-link.bonus:hover { background: #ecfdf5; }
-.modal-hint { font-size: 12px; color: #6b7280; margin-top: 8px; }
+.user-type-tag.internal { background: var(--control-surface); color: var(--text-muted); }
+.btn-link.bonus { color: var(--color-success); }
+.btn-link.bonus:hover { background: var(--color-success-bg); }
+.btn-link.ban { color: var(--color-danger-strong); }
+.btn-link.ban:hover { background: rgba(220, 38, 38, 0.1); }
+.btn-link.unban { color: var(--color-accent-blue); }
+.btn-link.unban:hover { background: #eff6ff; }
+.modal-hint { font-size: 12px; color: var(--text-muted); margin-top: 8px; }
+
+.row-selected { background: rgba(59, 130, 246, 0.06); }
+.row-illegal { opacity: 0.7; }
+.selected-hint { font-size: 13px; color: var(--text-secondary); padding: 0 4px; }
+.btn-danger-lite { background: rgba(220, 38, 38, 0.1); color: var(--color-danger-strong); border: 1px solid rgba(220, 38, 38, 0.2); }
+.btn-danger-lite:hover { background: rgba(220, 38, 38, 0.18); }
 
 .member-page { padding: 10px 0; }
 .admin-card { margin-bottom: 20px; }
-.function-wrapper { 
-  display: flex; 
-  flex-wrap: wrap; 
-  justify-content: space-between; 
-  align-items: center; 
+.function-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
   gap: 16px;
-  margin-bottom: 20px; 
+  margin-bottom: 20px;
 }
 .search-wrapper { display: flex; align-items: center; gap: 12px; }
 .search-input { width: 320px; padding: 8px 14px; font-size: 14px; }
 .label { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
 .form-select { padding: 8px 12px; font-size: 14px; min-width: 120px; }
+.btns-wrapper { display: flex; align-items: center; gap: 8px; }
 
-.btn-info { background: #3b82f6; color: #fff; }
+.btn-info { background: var(--color-accent-blue); color: var(--text-on-primary); }
 .btn-info:hover { background: #2563eb; }
-.btn-success { background: #10b981; color: #fff; }
-.btn-success:hover { background: #059669; }
+.btn-success { background: var(--color-success-bright); color: var(--text-on-primary); }
+.btn-success:hover { background: var(--color-success); }
 
 .status-tag {
   display: inline-flex;
@@ -385,35 +519,35 @@ onMounted(async () => {
   font-size: 12px;
   font-weight: 600;
 }
-.status-tag.normal { background: #ecfdf5; color: #059669; }
-.status-tag.illegal { background: #fef2f2; color: #dc2626; }
+.status-tag.normal { background: var(--color-success-bg); color: var(--color-success); }
+.status-tag.illegal { background: #fef2f2; color: var(--color-danger-strong); }
 .vip-tag { display: inline-flex; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; background: #fef3c7; color: #b45309; }
 
 .action-cell { display: flex; gap: 8px; }
-.btn-link { 
-  padding: 4px 8px; 
-  border-radius: 4px; 
-  font-size: 13px; 
+.btn-link {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 13px;
   font-weight: 500;
   text-decoration: none;
   background: transparent;
   border: none;
   cursor: pointer;
 }
-.btn-link.primary { color: #3b82f6; background: #eff6ff; }
+.btn-link.primary { color: var(--color-accent-blue); background: #eff6ff; }
 .btn-link.primary:hover { background: #dbeafe; }
 
 .page-wrapper { margin-top: 24px; padding: 0 4px; }
 .pagination { display: flex; align-items: center; justify-content: flex-end; gap: 20px; }
-.page-btn { 
-  padding: 6px 14px; 
-  font-size: 13px; 
-  font-weight: 500; 
-  color: #4b5563;
-  border: 1px solid #e5e7eb; 
-  background: #fff;
+.page-btn {
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  background: var(--ui-surface-2);
   border-radius: 6px;
 }
 .page-btn:not(:disabled):hover { border-color: var(--primary-color); color: var(--primary-color); }
-.page-info { font-size: 13px; color: #6b7280; }
+.page-info { font-size: 13px; color: var(--text-muted); }
 </style>

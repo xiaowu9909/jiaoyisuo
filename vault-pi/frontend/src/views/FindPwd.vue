@@ -21,7 +21,7 @@ let countdownTimer = null
 async function sendCode() {
   const e = (email.value || '').trim()
   if (!e) {
-    errorMsg.value = '请输入邮箱'
+    errorMsg.value = t('uc.findPwd.errorEmail')
     return
   }
   errorMsg.value = ''

@@ -88,6 +88,9 @@ public class AdminDataController {
         if (newPassword != null && !newPassword.isBlank()) {
             String pwdErr = com.vaultpi.common.PasswordPolicy.validate(newPassword);
             if (pwdErr != null) return Result.fail(400, pwdErr);
+            String currentPassword = body.get("currentPassword") != null ? body.get("currentPassword").toString() : null;
+            if (currentPassword == null || currentPassword.isBlank()) return Result.fail(400, "请输入当前密码");
+            if (!passwordEncoder.matches(currentPassword, m.getPassword())) return Result.fail(400, "当前密码错误");
             m.setPassword(passwordEncoder.encode(newPassword));
         }
         memberRepository.save(m);

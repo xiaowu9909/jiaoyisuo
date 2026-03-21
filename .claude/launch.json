@@ -1,0 +1,26 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Backend (Spring Boot :8081)",
+      "runtimeExecutable": "mvn",
+      "runtimeArgs": ["spring-boot:run"],
+      "cwd": "vault-pi/backend",
+      "port": 8081
+    },
+    {
+      "name": "Frontend C-端 (:5174)",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "vault-pi/frontend",
+      "port": 5174
+    },
+    {
+      "name": "Admin B-端 (:5173)",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "vault-pi/admin",
+      "port": 5173
+    }
+  ]
+}

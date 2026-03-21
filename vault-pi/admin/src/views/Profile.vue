@@ -8,6 +8,7 @@ const errorMsg = ref('')
 const successMsg = ref('')
 
 const displayName = ref('')
+const currentPassword = ref('')
 const newPassword = ref('')
 const newPasswordConfirm = ref('')
 const profileSubmitting = ref(false)
@@ -43,8 +44,13 @@ async function saveProfile() {
 }
 
 async function savePassword() {
+  const cur = currentPassword.value
   const pwd = newPassword.value
   const confirm = newPasswordConfirm.value
+  if (!cur) {
+    errorMsg.value = '请输入当前密码'
+    return
+  }
   if (!pwd || pwd.length < 6) {
     errorMsg.value = '新密码至少 6 位'
     return
@@ -57,8 +63,9 @@ async function savePassword() {
   errorMsg.value = ''
   successMsg.value = ''
   try {
-    await postAdminMeUpdate({ newPassword: pwd })
+    await postAdminMeUpdate({ currentPassword: cur, newPassword: pwd })
     successMsg.value = '密码已修改，请使用新密码登录'
+    currentPassword.value = ''
     newPassword.value = ''
     newPasswordConfirm.value = ''
   } catch (e) {
@@ -105,6 +112,10 @@ onMounted(load)
           <div class="profile-section">
             <h4>修改密码</h4>
             <div class="form-group">
+              <label>当前密码</label>
+              <input v-model="currentPassword" type="password" class="input" placeholder="请输入当前登录密码" autocomplete="current-password" />
+            </div>
+            <div class="form-group">
               <label>新密码</label>
               <input v-model="newPassword" type="password" class="input" placeholder="至少 6 位" autocomplete="new-password" />
             </div>
@@ -112,7 +123,7 @@ onMounted(load)
               <label>确认新密码</label>
               <input v-model="newPasswordConfirm" type="password" class="input" placeholder="再次输入" autocomplete="new-password" />
             </div>
-            <button type="button" class="btn btn-primary" :disabled="pwdSubmitting || !newPassword || !newPasswordConfirm" @click="savePassword">
+            <button type="button" class="btn btn-primary" :disabled="pwdSubmitting || !currentPassword || !newPassword || !newPasswordConfirm" @click="savePassword">
               {{ pwdSubmitting ? '提交中…' : '修改密码' }}
             </button>
           </div>
@@ -123,28 +134,28 @@ onMounted(load)
 </template>
 
 <style scoped>
-.profile-page { color: #333; }
-.admin-card { border: 1px solid #eef0f2; border-radius: 8px; overflow: hidden; background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.03); max-width: 560px; }
-.card-head { padding: 16px 20px; background: #f8f9fa; border-bottom: 1px solid #eef0f2; }
-.card-title { font-size: 15px; font-weight: 600; color: #1a202c; }
+.profile-page { color: var(--text-main); }
+.admin-card { border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; background: var(--ui-surface-2); box-shadow: 0 4px 12px rgba(0,0,0,0.03); max-width: 560px; }
+.card-head { padding: 16px 20px; background: var(--table-th-bg); border-bottom: 1px solid var(--border-color); }
+.card-title { font-size: 15px; font-weight: 600; color: var(--text-main); }
 .card-body { padding: 20px; }
 .profile-section { margin-bottom: 28px; }
 .profile-section:last-of-type { margin-bottom: 0; }
-.profile-section h4 { font-size: 14px; color: #374151; margin: 0 0 14px 0; padding-bottom: 8px; border-bottom: 1px solid #e5e7eb; }
+.profile-section h4 { font-size: 14px; color: var(--text-secondary); margin: 0 0 14px 0; padding-bottom: 8px; border-bottom: 1px solid var(--border-color); }
 .info-row { display: flex; align-items: center; margin-bottom: 12px; }
-.info-row .label { width: 100px; flex-shrink: 0; color: #6b7280; font-size: 13px; }
-.info-row .value { color: #111827; }
+.info-row .label { width: 100px; flex-shrink: 0; color: var(--text-muted); font-size: 13px; }
+.info-row .value { color: var(--text-main); }
 .info-row.edit-row { align-items: flex-start; }
 .edit-inline { display: flex; align-items: center; gap: 10px; flex: 1; }
-.input { padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 6px; outline: none; font-size: 13px; width: 220px; }
+.input { padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 6px; outline: none; font-size: 13px; width: 220px; }
 .form-group { margin-bottom: 14px; }
-.form-group label { display: block; margin-bottom: 6px; color: #4a5568; font-size: 13px; }
+.form-group label { display: block; margin-bottom: 6px; color: var(--text-secondary); font-size: 13px; }
 .form-group .input { width: 100%; max-width: 280px; }
 .btn { padding: 8px 18px; border-radius: 6px; font-size: 14px; cursor: pointer; border: none; font-weight: 500; }
-.btn-primary { background: #2d8cf0; color: #fff; }
+.btn-primary { background: var(--color-accent-blue); color: var(--text-on-primary); }
 .btn:disabled { opacity: 0.6; cursor: not-allowed; }
-.mono { font-family: monospace; color: #4b5563; }
-.error { color: #e53e3e; font-size: 13px; margin-bottom: 12px; }
-.success { color: #38a169; font-size: 13px; margin-bottom: 12px; }
-.loading { color: #6b7280; padding: 20px; }
+.mono { font-family: monospace; color: var(--text-secondary); }
+.error { color: var(--color-danger-alt); font-size: 13px; margin-bottom: 12px; }
+.success { color: var(--color-emerald); font-size: 13px; margin-bottom: 12px; }
+.loading { color: var(--text-muted); padding: 20px; }
 </style>

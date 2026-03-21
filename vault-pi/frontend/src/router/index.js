@@ -16,15 +16,6 @@ const routes = [
   { path: '/help', name: 'Help', component: () => import('../views/Help.vue'), meta: { title: '帮助中心' } },
   { path: '/helplist', name: 'HelpList', component: () => import('../views/HelpList.vue'), meta: { title: '帮助分类' } },
   { path: '/help/detail/:id', name: 'HelpDetail', component: () => import('../views/HelpDetail.vue'), meta: { title: '帮助详情' } },
-  { path: '/identbusiness', name: 'IdentBusiness', component: () => import('../views/Placeholder.vue'), meta: { title: '商家认证' } },
-  { path: '/checkuser', name: 'CheckUser', component: () => import('../views/Placeholder.vue'), meta: { title: '验证用户' } },
-  { path: '/chat', name: 'Chat', component: () => import('../views/Placeholder.vue'), meta: { title: '聊天' } },
-  {
-    path: '/otc',
-    name: 'OtcMain',
-    component: () => import('../views/Placeholder.vue'),
-    meta: { title: 'OTC' },
-  },
   {
     path: '/uc',
     component: () => import('../views/UcLayout.vue'),
@@ -38,7 +29,6 @@ const routes = [
       { path: 'recharge', name: 'UcRecharge', component: () => import('../views/uc/UcRecharge.vue'), meta: { title: '充值' } },
       { path: 'withdraw', name: 'UcWithdraw', component: () => import('../views/uc/UcWithdraw.vue'), meta: { title: '提现' } },
       { path: 'withdraw/address', name: 'UcWithdrawAddress', component: () => import('../views/uc/UcWithdrawAddress.vue'), meta: { title: '提现地址' } },
-      { path: 'order', name: 'UcOrder', component: () => import('../views/uc/UcOrder.vue'), meta: { title: '订单' } },
       { path: 'entrust/current', name: 'UcEntrustCurrent', component: () => import('../views/uc/UcEntrustCurrent.vue'), meta: { title: '当前委托' } },
       { path: 'entrust/history', name: 'UcEntrustHistory', component: () => import('../views/uc/UcEntrustHistory.vue'), meta: { title: '历史委托' } },
     ],
@@ -46,7 +36,7 @@ const routes = [
   {
     path: '/admin',
     component: () => import('../views/admin/AdminLayout.vue'),
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, requiresAdmin: true },
     children: [
       { path: '', name: 'AdminDashboard', component: () => import('../views/admin/Dashboard.vue'), meta: { title: '管理仪表盘' } },
       { path: 'members', name: 'AdminMembers', component: () => import('../views/admin/Members.vue'), meta: { title: '会员管理' } },
@@ -57,7 +47,7 @@ const routes = [
       { path: 'help', name: 'AdminHelp', component: () => import('../views/admin/HelpArticles.vue'), meta: { title: '帮助文章' } },
     ],
   },
-  { path: '/:pathMatch(.*)*', name: 'NotFound', component: () => import('../views/Home.vue'), meta: { title: '首页' } },
+  { path: '/:pathMatch(.*)*', name: 'NotFound', component: () => import('../views/NotFound.vue'), meta: { title: '404' } },
 ]
 
 const router = createRouter({
@@ -65,15 +55,18 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach((to, _from, next) => {
-  if (to.meta.requiresAuth) {
-    try {
-      const appStore = useAppStore()
-      if (!appStore.isLogin) {
-        next({ path: '/login', query: { redirect: to.fullPath } })
-        return
-      }
-    } catch (_) {}
+router.beforeEach(async (to, _from, next) => {
+  const appStore = useAppStore()
+  try {
+    await appStore.checkLogin()
+  } catch (_) {}
+  if (to.meta.requiresAuth && !appStore.isLogin) {
+    next({ path: '/login', query: { redirect: to.fullPath } })
+    return
+  }
+  if (to.meta.requiresAdmin && !appStore.isAdmin) {
+    next({ path: '/' })
+    return
   }
   next()
 })

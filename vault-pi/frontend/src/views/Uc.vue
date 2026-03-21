@@ -18,10 +18,25 @@ const wallets = ref([])
 const loading = ref(true)
 const errorMsg = ref('')
 
+/** Finance 表格：仅展示可用/冻结/合计至少一项大于 0 的币种（避免满屏 0） */
+const financeWallets = computed(() =>
+  wallets.value.filter((w) => {
+    const b = Number(w.balance ?? 0)
+    const f = Number(w.frozenBalance ?? 0)
+    return Number.isFinite(b) && Number.isFinite(f) && (b > 0 || f > 0)
+  })
+)
+
+/** 兑换「划出」下拉：仅列出可用余额 > 0 的钱包 */
+const walletsWithAvailable = computed(() =>
+  wallets.value.filter((w) => Number(w.balance ?? 0) > 0)
+)
+
 const showExchangeModal = ref(false)
 const exchangeLoading = ref(false)
 const exchangeForm = ref({ fromUnit: '', toUnit: '', amount: '' })
-const allCoins = ref(['BTC', 'ETH', 'USDT', 'SOL', 'BNB', 'DOGE', 'XRP', 'ADA', 'DOT', 'MATIC', 'LTC', 'BCH'])
+/** 兑换「划入」下拉：所有钱包的币种（不限余额） */
+const allCoins = computed(() => wallets.value.map((w) => w.unit))
 const exchangeRate = ref(0)
 
 const exchangeResult = computed(() => {
@@ -33,8 +48,10 @@ async function fetchWallets() {
   loading.value = true
   try {
     wallets.value = await getWalletList()
-    if (wallets.value.length > 0 && !exchangeForm.value.fromUnit) {
-      exchangeForm.value.fromUnit = wallets.value[0].unit
+    if (!exchangeForm.value.fromUnit) {
+      const firstAvail = wallets.value.find((w) => Number(w.balance ?? 0) > 0)
+      if (firstAvail) exchangeForm.value.fromUnit = firstAvail.unit
+      else if (wallets.value.length > 0) exchangeForm.value.fromUnit = wallets.value[0].unit
     }
   } catch (e) {
     errorMsg.value = e.message || t('common.error')
@@ -115,6 +132,21 @@ function formatNum(n) {
   const x = Number(n)
   return Number.isFinite(x) ? x.toFixed(8) : '0.00'
 }
+
+/** 一键填入「从」币种全部可用余额 */
+function setMaxAmount() {
+  const u = exchangeForm.value.fromUnit
+  if (!u) return
+  const w = wallets.value.find((x) => x.unit === u)
+  if (!w) return
+  const bal = Number(w.balance ?? 0)
+  if (!Number.isFinite(bal) || bal <= 0) {
+    exchangeForm.value.amount = ''
+    return
+  }
+  const s = formatNum(bal).replace(/\.?0+$/, '')
+  exchangeForm.value.amount = s === '' ? '0' : s
+}
 </script>
 
 <template>
@@ -136,7 +168,7 @@ function formatNum(n) {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="w in wallets" :key="w.id">
+          <tr v-for="w in financeWallets" :key="w.id">
             <td class="unit">{{ w.unit }}</td>
             <td>{{ formatNum(w.balance) }}</td>
             <td>{{ formatNum(w.frozenBalance) }}</td>
@@ -144,7 +176,7 @@ function formatNum(n) {
           </tr>
         </tbody>
       </table>
-      <p v-if="!wallets.length && !loading" class="no-data">{{ t('common.nodata') }}</p>
+      <p v-if="!financeWallets.length && !loading" class="no-data">{{ t('common.nodata') }}</p>
     </div>
 
     <!-- Exchange Modal -->
@@ -155,7 +187,7 @@ function formatNum(n) {
       <div class="form-item">
         <label>{{ t('uc.exchangeModal.from') }}</label>
         <select v-model="exchangeForm.fromUnit" class="m-select">
-          <option v-for="w in wallets" :key="w.unit" :value="w.unit">{{ w.unit }} ({{ t('uc.exchangeModal.balance') }}: {{ formatNum(w.balance) }})</option>
+          <option v-for="w in walletsWithAvailable" :key="w.unit" :value="w.unit">{{ w.unit }} ({{ t('uc.exchangeModal.balance') }}: {{ formatNum(w.balance) }})</option>
         </select>
       </div>
       <div class="form-item">
@@ -216,5 +248,46 @@ function formatNum(n) {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
+}
+
+.amount-field-label {
+  display: block;
+  font-size: 14px;
+  color: #94a3b8;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+.amount-with-max {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  width: 100%;
+}
+.amount-input-el {
+  flex: 1;
+  min-width: 0;
+}
+.amount-with-max :deep(.m-input) {
+  width: 100%;
+}
+.max-btn {
+  flex-shrink: 0;
+  align-self: stretch;
+  padding: 0 14px;
+  min-height: 44px;
+  border-radius: 8px;
+  border: 1px solid #f0a70a;
+  background: rgba(240, 167, 10, 0.12);
+  color: #f0a70a;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.max-btn:hover {
+  background: rgba(240, 167, 10, 0.22);
+}
+.max-btn:active {
+  opacity: 0.9;
 }
 </style>
