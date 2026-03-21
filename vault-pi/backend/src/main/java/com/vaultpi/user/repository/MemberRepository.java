@@ -40,6 +40,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     List<Member> findByParentIdIn(List<Long> parentIds);
 
+    List<Member> findByAiStatusAndAiExpireTimeAfter(Integer aiStatus, java.time.Instant now);
+
+    List<Member> findByAiStatus(Integer aiStatus);
+
     @Query("SELECT m FROM Member m WHERE m.id IN :ids AND m.role <> 'ADMIN' " +
            "AND (:status IS NULL OR :status = '' OR m.status = :status) " +
            "AND (:kw IS NULL OR :kw = '' OR LOWER(m.username) LIKE LOWER(CONCAT('%', :kw, '%')) " +
