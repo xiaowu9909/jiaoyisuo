@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { getOrderTradeHistory } from '../../api'
+import { getOrderTradeHistory, getFuturesOrderHistory } from '../../api'
 import MobileButton from '../../components/mobile/MobileButton.vue'
 
 const { t } = useI18n()
@@ -12,13 +12,33 @@ const total = ref(0)
 const page = ref(1)
 const pageSize = 20
 
+/** 合约单与现货成交流水合并：交易页为合约下单，原仅查现货故列表为空 */
 async function load() {
   loading.value = true
   errorMsg.value = ''
   try {
-    const data = await getOrderTradeHistory(page.value, pageSize)
-    list.value = data?.content || []
-    total.value = data?.totalElements || 0
+    const [spotData, futData] = await Promise.all([
+      getOrderTradeHistory(1, 500).catch(() => ({ content: [], totalElements: 0 })),
+      getFuturesOrderHistory(1, 500).catch(() => ({ content: [], totalElements: 0 })),
+    ])
+    const spotRows = spotData?.content || []
+    const futRows = (futData?.content || []).map((o) => {
+      const price = Number(o.price) || 0
+      const amt = Number(o.amount) || 0
+      return {
+        ...o,
+        tradedAmount: amt,
+        totalAmount: price * amt,
+      }
+    })
+    const merged = [...spotRows, ...futRows].sort((a, b) => {
+      const ta = new Date(a.tradeTime || a.createTime).getTime()
+      const tb = new Date(b.tradeTime || b.createTime).getTime()
+      return tb - ta
+    })
+    total.value = merged.length
+    const start = (page.value - 1) * pageSize
+    list.value = merged.slice(start, start + pageSize)
   } catch (e) {
     errorMsg.value = e.message || t('common.error')
   } finally {
@@ -56,6 +76,18 @@ function formatNum(n) {
   return Number.isFinite(x) ? (x >= 1 ? x.toFixed(4) : x.toFixed(8)) : '-'
 }
 
+function entrustDirectionText(o) {
+  if (o.direction === 'LONG') {
+    const lv = o.leverage != null ? ` ${o.leverage}x` : ''
+    return `${t('exchange.long')}${lv}`
+  }
+  if (o.direction === 'SHORT') {
+    const lv = o.leverage != null ? ` ${o.leverage}x` : ''
+    return `${t('exchange.short')}${lv}`
+  }
+  return o.direction === 'BUY' ? t('uc.entrustHistory.buy') : t('uc.entrustHistory.sell')
+}
+
 onMounted(load)
 </script>
 
@@ -80,9 +112,11 @@ onMounted(load)
         </thead>
         <tbody>
           <tr v-for="o in list" :key="o.orderId">
-            <td>{{ formatTime(o.createTime) }}</td>
+            <td>{{ formatTime(o.tradeTime || o.createTime) }}</td>
             <td>{{ o.symbol || '-' }}</td>
-            <td :class="o.direction === 'BUY' ? 'dir-buy' : 'dir-sell'">{{ o.direction === 'BUY' ? t('uc.entrustHistory.buy') : t('uc.entrustHistory.sell') }}</td>
+            <td :class="(o.direction === 'BUY' || o.direction === 'LONG') ? 'dir-buy' : 'dir-sell'">
+              {{ entrustDirectionText(o) }}
+            </td>
             <td>{{ formatNum(o.price) }}</td>
             <td>{{ formatNum(o.tradedAmount) }}</td>
             <td>{{ formatNum(o.totalAmount) }}</td>

@@ -1,10 +1,12 @@
 <script setup>
-import { computed, ref, watch, onMounted } from 'vue'
+import { computed, ref, watch, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from './stores/app'
 import { getSiteLogoConfig } from './api'
 import { useDevice } from './hooks/useDevice'
+import { applyFaviconFromConfig, setPageTitleBaseC, syncCTabTitle } from './utils/siteBranding'
+import { resolveUploadUrlForDisplay } from './utils/uploadAssetUrl'
 import CookieConsent from './components/CookieConsent.vue'
 
 const route = useRoute()
@@ -15,15 +17,57 @@ const { isMobile } = useDevice()
 
 /** C 端全局 Logo 配置（B 端可修改），无则使用默认路径 */
 const siteLogoConfig = ref(null)
+/** 配置加载后刷新一次，避免浏览器缓存旧 Logo 图 */
+const logoBust = ref(0)
+let configPollTimer = null
+
+function logoSrcWithBust(url, fallback) {
+  const raw = resolveUploadUrlForDisplay((url ?? '').trim())
+  if (!raw) return fallback
+  const sep = raw.includes('?') ? '&' : '?'
+  return `${raw}${sep}cb=${logoBust.value}`
+}
 
 onMounted(async () => {
+  // 刷新后内存无 CSRF，但会话 Cookie 可能仍有效；先拉取 /check/login 写回 csrfToken，避免合约/现货等 POST 403
+  if (app.isLogin) {
+    try {
+      await app.checkLogin()
+    } catch (_) {}
+  }
   siteLogoConfig.value = await getSiteLogoConfig()
+  logoBust.value = Date.now()
+  if (siteLogoConfig.value) {
+    applyFaviconFromConfig(siteLogoConfig.value.faviconUrl)
+    const c = String(siteLogoConfig.value.pageTitleC ?? '').trim()
+    setPageTitleBaseC(c || 'Vault π')
+  } else {
+    setPageTitleBaseC('Vault π')
+  }
+  syncCTabTitle(route.meta?.title)
+  // Poll for config changes every 60s so B-end updates reflect without page reload
+  configPollTimer = setInterval(async () => {
+    try {
+      const cfg = await getSiteLogoConfig()
+      if (cfg) {
+        siteLogoConfig.value = cfg
+        logoBust.value = Date.now()
+        applyFaviconFromConfig(cfg.faviconUrl)
+        const c = String(cfg.pageTitleC ?? '').trim()
+        setPageTitleBaseC(c || 'Vault π')
+      }
+    } catch (_) {}
+  }, 60000)
   if (isMobile.value && typeof window !== 'undefined') {
     try {
       window.__ssc = window.__ssc || {}
       window.__ssc.setting = { ...(window.__ssc.setting || {}), hideIcon: true }
     } catch (_) {}
   }
+})
+
+onUnmounted(() => {
+  if (configPollTimer) clearInterval(configPollTimer)
 })
 
 const navOpen = ref(false)
@@ -90,6 +134,12 @@ watch(
   },
   { immediate: true }
 )
+
+watch(
+  () => [route.path, route.meta?.title],
+  () => syncCTabTitle(route.meta?.title),
+  { immediate: true },
+)
 </script>
 
 <template>
@@ -130,7 +180,7 @@ watch(
       <header v-if="!isMobile" class="layout">
         <div class="layout-ceiling">
           <router-link to="/" class="layout-logo" @click="closeMenus">
-            <img :src="(siteLogoConfig?.headerLogoUrl || '').trim() || '/images/logo.png'" alt="logo" class="layout-logo-img" />
+            <img :src="logoSrcWithBust(siteLogoConfig?.headerLogoUrl, '/images/logo.png')" alt="logo" class="layout-logo-img" />
           </router-link>
           <div class="layout-ceiling-main">
             <!-- Desktop Nav -->
@@ -185,7 +235,7 @@ watch(
 
       <footer v-if="!isExchange" class="footer">
         <div class="footer_content">
-          <img :src="(siteLogoConfig?.footerLogoUrl || '').trim() || '/images/logo-bottom.png'" alt="logo" class="footer_logo" />
+          <img :src="logoSrcWithBust(siteLogoConfig?.footerLogoUrl, '/images/logo-bottom.png')" alt="logo" class="footer_logo" />
           <div class="footer_text">
             <p class="footer_gsmc">Vault π</p>
             <p class="footer_copy">Copyright © Vault π (Vault314.com) All rights reserved.</p>

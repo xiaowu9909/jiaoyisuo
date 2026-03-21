@@ -1,39 +1,139 @@
 const API_BASE = import.meta.env.VITE_API_BASE || '/api'
 
+/** 与后端 CsrfFilter 的 X-CSRF-TOKEN 对应；生产 profile 开启 csrf-enabled 时 POST 必带 */
+export const ADMIN_CSRF_STORAGE_KEY = 'vaultpi-admin-csrf'
+
+export function storeAdminCsrfToken(token) {
+  if (token != null && token !== '') {
+    sessionStorage.setItem(ADMIN_CSRF_STORAGE_KEY, String(token))
+  } else {
+    sessionStorage.removeItem(ADMIN_CSRF_STORAGE_KEY)
+  }
+}
+
 const BACKEND_HINT = '请先启动后端：cd backend && mvn spring-boot:run（确认端口 8081 未被占用）'
 
-async function request(path, options = {}) {
-  let res
+function isMutatingMethod(method) {
+  const m = (method || 'GET').toUpperCase()
+  return !['GET', 'HEAD', 'OPTIONS'].includes(m)
+}
+
+/** 与路由守卫一致：从 /check/login 拉取 csrfToken 并写入 sessionStorage（会话无 token 时 POST 会 403） */
+/** 登出（带 CSRF：头 + body + Cookie 兜底），请优先使用本方法替代裸 fetch */
+export async function postAdminLogout() {
+  return request('/logout', { method: 'POST', body: '{}' })
+}
+
+export async function refreshAdminCsrfFromServer() {
   try {
-    res = await fetch(`${API_BASE}${path}`, {
+    const res = await fetch(`${API_BASE}/check/login`, {
+      method: 'POST',
       credentials: 'include',
-      headers: { 'Content-Type': 'application/json', ...options.headers },
-      ...options,
+      headers: { 'Content-Type': 'application/json' },
+      body: '{}',
     })
-  } catch (e) {
-    const msg = e?.message || ''
-    if (msg.includes('fetch') || e?.name === 'TypeError') {
-      throw new Error('无法连接后端（Failed to fetch）。' + BACKEND_HINT)
+    const text = await res.text()
+    const json = JSON.parse(text)
+    if (json.code !== 0 || !json.data || json.data === false) return null
+    const token = json.data?.csrfToken
+    if (token) {
+      storeAdminCsrfToken(String(token))
+      return String(token)
     }
-    throw e
-  }
-  const text = await res.text()
-  const ct = res.headers.get('content-type') || ''
-  if (!ct.includes('application/json') && text.trimStart().startsWith('<')) {
-    throw new Error('接口返回了 HTML 而非 JSON。' + BACKEND_HINT)
-  }
-  let json
-  try {
-    json = JSON.parse(text)
+    return null
   } catch (_) {
-    throw new Error('接口返回内容无法解析为 JSON。' + BACKEND_HINT)
+    return null
   }
-  if (res.status === 401 || res.status === 403) {
-    window.location.href = window.location.origin + '/login'
-    throw new Error(json.message || '请重新登录')
+}
+
+function isCsrfForbiddenMessage(json) {
+  const m = String(json?.message || json?.msg || json?.error || '').toLowerCase()
+  return m.includes('csrf') || m.includes('令牌')
+}
+
+/** 与后端 CsrfFilter 一致：代理可能剥掉 X-CSRF-TOKEN，顶层 csrfToken 作兜底。始终覆盖确保使用最新 token */
+function mergeCsrfIntoJsonBody(body, csrf) {
+  if (body == null || typeof body !== 'string' || csrf == null || csrf === '') return body
+  try {
+    const parsed = JSON.parse(body)
+    if (parsed != null && typeof parsed === 'object' && !Array.isArray(parsed)) {
+      return JSON.stringify({ ...parsed, csrfToken: csrf })
+    }
+  } catch (_) {
+    /* 非 JSON 则原样 */
   }
-  if (json.code !== 0) throw new Error(json.message || 'request failed')
-  return json.data
+  return body
+}
+
+async function request(path, options = {}) {
+  const { headers: optHeaders, body: optBody, ...restOptions } = options
+  const method = restOptions.method || 'GET'
+
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const headers = { 'Content-Type': 'application/json', ...optHeaders }
+    let body = optBody
+    if (isMutatingMethod(method)) {
+      let csrf = sessionStorage.getItem(ADMIN_CSRF_STORAGE_KEY)
+      if (!csrf) {
+        csrf = await refreshAdminCsrfFromServer()
+      }
+      if (csrf) {
+        headers['X-CSRF-TOKEN'] = csrf
+        const ct = String(headers['Content-Type'] || 'application/json').toLowerCase()
+        if (ct.includes('application/json')) {
+          body = mergeCsrfIntoJsonBody(body, csrf)
+        }
+      }
+    }
+    let res
+    try {
+      res = await fetch(`${API_BASE}${path}`, {
+        credentials: 'include',
+        ...restOptions,
+        headers,
+        body,
+      })
+    } catch (e) {
+      const msg = e?.message || ''
+      if (msg.includes('fetch') || e?.name === 'TypeError') {
+        throw new Error('无法连接后端（Failed to fetch）。' + BACKEND_HINT)
+      }
+      throw e
+    }
+    const text = await res.text()
+    const ct = res.headers.get('content-type') || ''
+    if (!ct.includes('application/json') && text.trimStart().startsWith('<')) {
+      throw new Error('接口返回了 HTML 而非 JSON。' + BACKEND_HINT)
+    }
+    let json
+    try {
+      json = JSON.parse(text)
+    } catch (_) {
+      throw new Error('接口返回内容无法解析为 JSON。' + BACKEND_HINT)
+    }
+    if (res.status === 401) {
+      storeAdminCsrfToken(null)
+      window.location.href = window.location.origin + '/login'
+      throw new Error(json.message || '请重新登录')
+    }
+    if (res.status === 403) {
+      if (isMutatingMethod(method) && attempt === 0 && isCsrfForbiddenMessage(json)) {
+        await refreshAdminCsrfFromServer()
+        continue
+      }
+      const msg = json.message || json.msg || json.error || '禁止访问'
+      const hint = String(msg).includes('CSRF') ? '（请刷新页面后重试）' : ''
+      throw new Error(String(msg) + hint)
+    }
+    if (json.code === 401) {
+      storeAdminCsrfToken(null)
+      window.location.href = window.location.origin + '/login'
+      throw new Error(json.message || '请重新登录')
+    }
+    if (json.code !== 0) throw new Error(json.message || 'request failed')
+    return json.data
+  }
+  throw new Error('CSRF 重试后仍失败，请刷新页面')
 }
 
 export async function getAdminAnnouncementPage(pageNo = 1, pageSize = 20) {
@@ -64,6 +164,17 @@ export async function getAdminExchangeCoinList() {
   return request('/admin/exchange-coin/list')
 }
 
+/** 虚拟盘现价 Map（symbol → 价格字符串）；走管理端接口，不依赖 /market（避免网关只代理 admin 时 thumb 不可用） */
+export async function getAdminVirtualLivePrices() {
+  return request('/admin/exchange/coin/virtual-live-prices')
+}
+
+/** 与 C 端同源：单交易对行情快照（虚拟盘为引擎实时价） */
+export async function getMarketSymbolThumbOne(symbol) {
+  const s = encodeURIComponent(String(symbol || '').trim())
+  return request(`/market/symbol-thumb-one?symbol=${s}`)
+}
+
 export async function postAdminExchangeCoinAdd(body) {
   return request('/admin/exchange/coin/add', { method: 'POST', body: JSON.stringify(body) })
 }
@@ -74,6 +185,17 @@ export async function postAdminExchangeCoinUpdate(body) {
 
 export async function postAdminExchangeCoinDelete(id) {
   return request('/admin/exchange/coin/delete', { method: 'POST', body: JSON.stringify({ id }) })
+}
+
+/**
+ * 重新生成虚拟盘内存 K 线预填（默认约半年 1m→聚合多周期），与引擎 vaultpi.virtual.kline-history-months 一致。
+ * @param {string} symbol 交易对如 BTC/USDT
+ * @param {string|number|null} [endPrice] 可选：预填前将引擎现价钳位到该值（区间内）
+ */
+export async function postAdminExchangeCoinRefillKlineHistory(symbol, endPrice = null) {
+  let path = `/admin/exchange/coin/refill-kline-history?symbol=${encodeURIComponent(String(symbol || '').trim())}`
+  if (endPrice != null && endPrice !== '') path += `&endPrice=${encodeURIComponent(String(endPrice))}`
+  return request(path, { method: 'POST', body: '{}' })
 }
 
 /** 设置虚拟盘行情趋势：direction=UP|DOWN, percent=涨跌幅%, duration=周期秒 */
@@ -368,8 +490,25 @@ export async function getAdminFuturesStats() {
   return request('/admin/futures/stats')
 }
 
+export async function postAdminFuturesPositionForceClose(positionId) {
+  return request('/admin/futures/position/close', {
+    method: 'POST',
+    body: JSON.stringify({ positionId }),
+  })
+}
+
 export async function getAdminSystemConfigList() {
   return request('/admin/system/config/list')
+}
+
+/** 管理后台操作日志分页 */
+export async function getAdminOperationLogPage(pageNo = 1, pageSize = 20) {
+  return request(`/admin/system/operation-log/page?pageNo=${pageNo}&pageSize=${pageSize}`)
+}
+
+/** 服务端错误日志分页（由 GlobalExceptionHandler 异步落库） */
+export async function getAdminErrorLogPage(pageNo = 1, pageSize = 20) {
+  return request(`/admin/system/error-log/page?pageNo=${pageNo}&pageSize=${pageSize}`)
 }
 
 export async function postAdminSystemConfigUpdate(data) {
@@ -409,23 +548,46 @@ export async function postAdminAdminUpdate(data) {
 export async function postAdminUploadImage(file) {
   const formData = new FormData()
   formData.append('file', file)
-  const res = await fetch(`${API_BASE}/admin/upload/image`, {
-    method: 'POST',
-    credentials: 'include',
-    body: formData,
-    // 不设置 Content-Type，由浏览器自动带 multipart/form-data; boundary=...
-  })
-  const text = await res.text()
-  let json
-  try {
-    json = JSON.parse(text)
-  } catch (_) {
-    throw new Error('响应解析失败')
+
+  for (let attempt = 0; attempt < 2; attempt++) {
+    let csrf = sessionStorage.getItem(ADMIN_CSRF_STORAGE_KEY)
+    if (!csrf) {
+      csrf = await refreshAdminCsrfFromServer()
+    }
+    const res = await fetch(`${API_BASE}/admin/upload/image`, {
+      method: 'POST',
+      credentials: 'include',
+      body: formData,
+      headers: csrf ? { 'X-CSRF-TOKEN': csrf } : {},
+    })
+    const text = await res.text()
+    let json
+    try {
+      json = JSON.parse(text)
+    } catch (_) {
+      throw new Error('响应解析失败')
+    }
+    if (res.status === 401) {
+      storeAdminCsrfToken(null)
+      window.location.href = window.location.origin + '/login'
+      throw new Error(json.message || '请重新登录')
+    }
+    if (res.status === 403) {
+      if (attempt === 0 && isCsrfForbiddenMessage(json)) {
+        await refreshAdminCsrfFromServer()
+        continue
+      }
+      const msg = json.message || json.msg || json.error || '禁止访问'
+      const hint = String(msg).includes('CSRF') ? '（请刷新页面后重试）' : ''
+      throw new Error(String(msg) + hint)
+    }
+    if (json.code === 401) {
+      storeAdminCsrfToken(null)
+      window.location.href = window.location.origin + '/login'
+      throw new Error(json.message || '请重新登录')
+    }
+    if (json.code !== 0) throw new Error(json.message || '上传失败')
+    return json.data?.url ?? ''
   }
-  if (res.status === 401 || res.status === 403) {
-    window.location.href = window.location.origin + '/login'
-    throw new Error(json.message || '请重新登录')
-  }
-  if (json.code !== 0) throw new Error(json.message || '上传失败')
-  return json.data?.url ?? ''
+  throw new Error('上传失败：CSRF 重试后仍无效')
 }
